@@ -1,3 +1,5 @@
+import math
+
 from Position import positionClass
 
 
@@ -7,12 +9,15 @@ class EnemyMisileClass(object):
         self.position = positionClass(pos.positionX, pos.positionY, pos.positionZ)
         self.ObjectivePosition = positionClass(ObjPosition.positionX, ObjPosition.positionY, ObjPosition.positionZ)
         self.orientation = self.getObjectiveDirection(pos, ObjPosition)
-        self.velocity = 0.001
-        self.exploted = False
-        self.difPositionWithObjectivePosition = positionClass(
-            abs(self.ObjectivePosition.positionX - self.position.positionX),
-            abs(self.ObjectivePosition.positionY - self.position.positionY),
-            abs(self.ObjectivePosition.positionZ - self.position.positionZ))
+        self.velocity = 2
+        self.objectiveImpacted = False
+        self.intercepted = False
+        self.difPositionWithObjectivePosition = (0,0,0)
+        self.moduleObjectivePosition = 0
+        self.normalizePositionObjectiveVector = (0,0,0)
+        self.calculateDifferenceWithObjectivePosition()
+        self.calculateModuleOfObjectivePosition()
+        self.calculateNormalizeObjectivePositionVector()
 
     def isInObjectiveX(self):
         if(self.ObjectivePosition.positionX - self.position.positionX < 5):
@@ -27,24 +32,30 @@ class EnemyMisileClass(object):
             return False
 
     def isInObjectivePerimeter(self):
-        if (abs(self.ObjectivePosition.positionX - self.position.positionX) <= 10 and
-            abs(self.ObjectivePosition.positionY - self.position.positionY) <= 10):
+        if (abs(self.ObjectivePosition.positionX - self.position.positionX) <= 5 and
+            abs(self.ObjectivePosition.positionY - self.position.positionY) <= 5):
             return True
         else:
             return False
 
     def isInObjectiveAltitude(self):
-        if(abs(self.ObjectivePosition.positionZ - self.position.positionZ) <= 5):
+        if(self.position.positionZ - self.ObjectivePosition.positionZ <= 5):
             return True
         else:
             return False
 
     def hasReachTheObjective(self):
         if(self.isInObjectiveX() and self.isInObjectiveY() and self.isInObjectiveAltitude()):
-            self.exploted = True
+            self.objectiveImpacted = True
 
     def hasBeenIntersected(self):
-        self.exploted = True
+        self.intercepted = True
+
+    def getObjectiveImpacted(self):
+        return self.objectiveImpacted
+
+    def getIntercepted(self):
+        return self.intercepted
 
     def getObjectiveDirection(self,myPosition, ObjPosition):
         direction = {"x": 1, "y": 1}
@@ -62,17 +73,32 @@ class EnemyMisileClass(object):
         return direction
 
     def goToObjective(self):
-        if not self.exploted:
-            if(abs(self.ObjectivePosition.positionX - self.position.positionX) > 10):
-                self.position.positionX += self.velocity * self.orientation["x"] * self.difPositionWithObjectivePosition.positionX
-            if(abs(self.ObjectivePosition.positionY - self.position.positionY) > 10):
-                self.position.positionY += self.velocity * self.orientation["y"] * self.difPositionWithObjectivePosition.positionY
+        if not self.objectiveImpacted and not self.intercepted:
+            if(abs(self.ObjectivePosition.positionX - self.position.positionX) > 5):
+                self.position.positionX += self.velocity * self.orientation["x"] * self.normalizePositionObjectiveVector.positionX
+            if(abs(self.ObjectivePosition.positionY - self.position.positionY) > 5):
+                self.position.positionY += self.velocity * self.orientation["y"] * self.normalizePositionObjectiveVector.positionY
             if(self.isInObjectivePerimeter() and not self.isInObjectiveAltitude()):
                 if not self.isInObjectiveX():
-                    self.position.positionX += self.velocity * self.orientation["x"] * self.difPositionWithObjectivePosition.positionX
+                    self.position.positionX += self.velocity * self.orientation["x"] * self.normalizePositionObjectiveVector.positionX
                 if not self.isInObjectiveY():
-                    self.position.positionY += self.velocity * self.orientation["y"] * self.difPositionWithObjectivePosition.positionY
-                self.position.positionZ -= self.velocity * self.difPositionWithObjectivePosition.positionZ
+                    self.position.positionY += self.velocity * self.orientation["y"] * self.normalizePositionObjectiveVector.positionY
+                self.position.positionZ -= self.velocity * self.normalizePositionObjectiveVector.positionZ
             self.hasReachTheObjective()
 
 
+    def calculateDifferenceWithObjectivePosition(self):
+        self.difPositionWithObjectivePosition = positionClass(
+            abs(self.ObjectivePosition.positionX - self.position.positionX),
+            abs(self.ObjectivePosition.positionY - self.position.positionY),
+            abs(self.ObjectivePosition.positionZ - self.position.positionZ))
+
+    def calculateModuleOfObjectivePosition(self):
+        self.moduleObjectivePosition = math.sqrt(self.difPositionWithObjectivePosition.positionX*self.difPositionWithObjectivePosition.positionX
+                    + self.difPositionWithObjectivePosition.positionY*self.difPositionWithObjectivePosition.positionY
+                    + self.difPositionWithObjectivePosition.positionZ*self.difPositionWithObjectivePosition.positionZ)
+
+    def calculateNormalizeObjectivePositionVector(self):
+        self.normalizePositionObjectiveVector = positionClass(self.difPositionWithObjectivePosition.positionX/self.moduleObjectivePosition,
+                                                self.difPositionWithObjectivePosition.positionY/self.moduleObjectivePosition,
+                                                self.difPositionWithObjectivePosition.positionZ/self.moduleObjectivePosition)
