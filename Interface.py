@@ -15,18 +15,23 @@ WINDOWSWIDTH = screenResolution.GetSystemMetrics(0) - 100
 WINDOWSHEIGHT = screenResolution.GetSystemMetrics(1) - 100
 
 MAPWIDTHLIMIT = int(WINDOWSWIDTH * 0.65)
-TEXTWIDTHSTART = WINDOWSWIDTH * 0.67
+TEXTWIDTHSTART = WINDOWSWIDTH * 0.72
+
+CITYSPAWNINFERIORLIMITWIDTH = int(MAPWIDTHLIMIT * 0.15)
+CITYSPAWNSUPERIORLIMITWIDTH = int(MAPWIDTHLIMIT * 0.7)
+
+CITYSPAWNINFERIORLIMITHEIGHT = int(WINDOWSHEIGHT * 0.25)
+CITYSPAWNSUPERIORLIMITHEIGHT = int(WINDOWSHEIGHT * 0.75)
 
 MISILESSPAWNINFERIORLIMIT = 0
-MISILESSPAWNSUPERIORLIMIT = int(WINDOWSHEIGHT)
+MISILESSPAWNSUPERIORLIMITWIDTH = int(MAPWIDTHLIMIT)
+MISILESSPAWNSUPERIORLIMITHEIGHT = int(WINDOWSHEIGHT)
 
-CITYSPAWNINFERIORLIMIT = int(WINDOWSHEIGHT * 0.25)
-CITYSPAWNSUPERIORLIMIT = int(WINDOWSHEIGHT * 0.75)
 
 CIRCLESIZE = 4
 CITYPICTURESIZE = 40
 
-font = pygame.font.SysFont('arial', 20)
+font = pygame.font.Font('digital-7.ttf', 35)
 # #####################################   FPS   ###########################################################
 clock = pygame.time.Clock()
 
@@ -37,21 +42,25 @@ def CityHit(enemy, strategicLocations):
             city.strategicLocationImpacted()
 
 def text(text, positionX, positionY):
-    screenText = font.render(text, True, (255,255,255))
+    screenText = font.render(text, True, (0,170,0))
     win.blit(screenText, (positionX, positionY))
 
 
 def drawWindow(contActiveMisiles, contMisilesDestroyed, contActiveCities, CitiesDestroyed, enemies, strategicLocations):
     # fondo de la pantalla
     win.fill((0,0,0)) #limpieza de la pantalla
+
     win.blit(radarBackground,(0,0))
+    win.blit(radarPanel,(MAPWIDTHLIMIT,0))
+
     drawStrategicLocations(strategicLocations)
     drawEnemyMisile(enemies)
-    text("Active misiles: " + str(contActiveMisiles), TEXTWIDTHSTART, WINDOWSHEIGHT * 0.1)
+
+    text("Active misiles: " + str(contActiveMisiles), TEXTWIDTHSTART, WINDOWSHEIGHT * 0.2)
     text("Misile Impact: " + str(contMisileImpact), TEXTWIDTHSTART, WINDOWSHEIGHT * 0.3)
-    text("Misiles destroyed: " + str(contMisilesDestroyed), TEXTWIDTHSTART, WINDOWSHEIGHT * 0.5)
-    text("Active cities: " + str(contActiveCities), TEXTWIDTHSTART, WINDOWSHEIGHT * 0.7)
-    text("Cities destroyed: " + str(CitiesDestroyed), TEXTWIDTHSTART, WINDOWSHEIGHT * 0.9)
+    text("Misiles destroyed: " + str(contMisilesDestroyed), TEXTWIDTHSTART, WINDOWSHEIGHT * 0.45)
+    text("Active cities: " + str(contActiveCities), TEXTWIDTHSTART, WINDOWSHEIGHT * 0.6)
+    text("Cities destroyed: " + str(CitiesDestroyed), TEXTWIDTHSTART, WINDOWSHEIGHT * 0.7)
 
     pygame.display.update()
 
@@ -70,10 +79,14 @@ def drawStrategicLocations(strategicLocations):
 
 def spawnEnemyMisiles(enemies, strategicLocations):
     if len(enemies) < 2:
-        Inferior = random.randint(MISILESSPAWNINFERIORLIMIT,CITYSPAWNINFERIORLIMIT)
-        Superior = random.randint(CITYSPAWNSUPERIORLIMIT,MISILESSPAWNSUPERIORLIMIT)
-        x = Inferior if Inferior%2 == 0 else Superior
-        y = Inferior if Superior%2 == 0 else Superior
+        InferiorX = random.randint(MISILESSPAWNINFERIORLIMIT,CITYSPAWNINFERIORLIMITWIDTH)
+        SuperiorX = random.randint(CITYSPAWNSUPERIORLIMITWIDTH,MISILESSPAWNSUPERIORLIMITWIDTH)
+
+        InferiorY = random.randint(MISILESSPAWNINFERIORLIMIT, CITYSPAWNINFERIORLIMITHEIGHT)
+        SuperiorY = random.randint(CITYSPAWNSUPERIORLIMITHEIGHT, MISILESSPAWNSUPERIORLIMITHEIGHT)
+
+        x = InferiorX if InferiorX%2 == 0 else SuperiorX
+        y = InferiorY if SuperiorY%2 == 0 else SuperiorY
         z = random.randint(100,200)
         positionRandom = positionClass(x,y,z)
         x = random.randint(0, len(strategicLocations) - 1)
@@ -85,8 +98,8 @@ def spawnEnemyMisiles(enemies, strategicLocations):
 
 
 def spawnStrategicLocations(strategicLocations):
-    x = random.randint(CITYSPAWNINFERIORLIMIT,CITYSPAWNSUPERIORLIMIT)
-    y = random.randint(CITYSPAWNINFERIORLIMIT,CITYSPAWNSUPERIORLIMIT)
+    x = random.randint(CITYSPAWNINFERIORLIMITWIDTH,CITYSPAWNSUPERIORLIMITWIDTH)
+    y = random.randint(CITYSPAWNINFERIORLIMITHEIGHT,CITYSPAWNSUPERIORLIMITHEIGHT)
     z = random.randint(0,50)
     strategicLocationPosition = positionClass(x,y,z)
     city = strategicLocationsClass(strategicLocationPosition)
@@ -94,6 +107,7 @@ def spawnStrategicLocations(strategicLocations):
 
 
 if __name__ == "__main__":
+    print(pygame.font.get_fonts())
     enemies = []
     strategicLocations = []
     win = pygame.display.set_mode((WINDOWSWIDTH, WINDOWSHEIGHT))
@@ -103,6 +117,9 @@ if __name__ == "__main__":
 
     cityPicture = pygame.image.load('city.png').convert_alpha()
     cityPicture = pygame.transform.scale(cityPicture, (CITYPICTURESIZE, CITYPICTURESIZE))
+
+    radarPanel = pygame.image.load('panel.png').convert_alpha()
+    radarPanel = pygame.transform.scale(radarPanel, (WINDOWSWIDTH - MAPWIDTHLIMIT, WINDOWSHEIGHT))
 
     for _ in range(5):
         spawnStrategicLocations(strategicLocations)
