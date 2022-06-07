@@ -1,3 +1,5 @@
+import math
+
 import pygame
 import ctypes
 import multiprocessing as multiprocess
@@ -17,50 +19,60 @@ WINDOWSHEIGHT = screenResolution.GetSystemMetrics(1) - 100
 MAPWIDTHLIMIT = int(WINDOWSWIDTH * 0.65)
 TEXTWIDTHSTART = WINDOWSWIDTH * 0.72
 
-CITYSPAWNINFERIORLIMITWIDTH = int(MAPWIDTHLIMIT * 0.15)
-CITYSPAWNSUPERIORLIMITWIDTH = int(MAPWIDTHLIMIT * 0.7)
+SMALLESTWINDOWSSIZE = MAPWIDTHLIMIT if MAPWIDTHLIMIT < WINDOWSHEIGHT else WINDOWSHEIGHT
 
-CITYSPAWNINFERIORLIMITHEIGHT = int(WINDOWSHEIGHT * 0.25)
-CITYSPAWNSUPERIORLIMITHEIGHT = int(WINDOWSHEIGHT * 0.75)
+FIRSTCIRCLERADAR = int(SMALLESTWINDOWSSIZE * 0.1)
+SECONDCIRCLERADAR = int(SMALLESTWINDOWSSIZE * 0.2)
+THIRDCIRCLERADAR = int(SMALLESTWINDOWSSIZE * 0.3)
+FOURTHCIRCLERADAR = int(SMALLESTWINDOWSSIZE * 0.4)
+
+CITYSPAWNINFERIORLIMITWIDTH = int((MAPWIDTHLIMIT/2) - FOURTHCIRCLERADAR)
+CITYSPAWNSUPERIORLIMITWIDTH = int(FOURTHCIRCLERADAR + (MAPWIDTHLIMIT/2))
+
+CITYSPAWNINFERIORLIMITHEIGHT = int((WINDOWSHEIGHT/2) - FOURTHCIRCLERADAR)
+CITYSPAWNSUPERIORLIMITHEIGHT = int((WINDOWSHEIGHT/2) + FOURTHCIRCLERADAR)
 
 MISILESSPAWNINFERIORLIMIT = 0
 MISILESSPAWNSUPERIORLIMITWIDTH = int(MAPWIDTHLIMIT)
 MISILESSPAWNSUPERIORLIMITHEIGHT = int(WINDOWSHEIGHT)
 
-
 CIRCLESIZE = 4
 CITYPICTURESIZE = 40
-
-font = pygame.font.Font('digital-7.ttf', 35)
 # #####################################   FPS   ###########################################################
 clock = pygame.time.Clock()
 
 # #####################################   FUNCTIONS   ###########################################################
+def convert_degrees(R, theta):
+    y = math.cos(math.pi * theta / 180) * R
+    x = math.sin(math.pi * theta / 180) * R
+    return [x + (MAPWIDTHLIMIT / 2) - 10, -(y - (WINDOWSHEIGHT / 2))]
+
 def CityHit(enemy, strategicLocations):
     for city in strategicLocations:
         if enemy.ObjectivePosition.positionX == city.position.positionX and enemy.ObjectivePosition.positionY == city.position.positionY:
             city.strategicLocationImpacted()
 
-def text(text, positionX, positionY):
+def text(text, positionX, positionY, font):
     screenText = font.render(text, True, (0,170,0))
     win.blit(screenText, (positionX, positionY))
 
 
 def drawWindow(contActiveMisiles, contMisilesDestroyed, contActiveCities, CitiesDestroyed, enemies, strategicLocations):
     # fondo de la pantalla
+    fontText = pygame.font.Font('./fonts/digital-7.ttf', 35)
+    fontNumbers = pygame.font.Font('./fonts/digital-7.ttf', 20)
     win.fill((0,0,0)) #limpieza de la pantalla
 
-    win.blit(radarBackground,(0,0))
     win.blit(radarPanel,(MAPWIDTHLIMIT,0))
-
+    drawRadarPanel(fontNumbers)
     drawStrategicLocations(strategicLocations)
     drawEnemyMisile(enemies)
 
-    text("Active misiles: " + str(contActiveMisiles), TEXTWIDTHSTART, WINDOWSHEIGHT * 0.2)
-    text("Misile Impact: " + str(contMisileImpact), TEXTWIDTHSTART, WINDOWSHEIGHT * 0.3)
-    text("Misiles destroyed: " + str(contMisilesDestroyed), TEXTWIDTHSTART, WINDOWSHEIGHT * 0.45)
-    text("Active cities: " + str(contActiveCities), TEXTWIDTHSTART, WINDOWSHEIGHT * 0.6)
-    text("Cities destroyed: " + str(CitiesDestroyed), TEXTWIDTHSTART, WINDOWSHEIGHT * 0.7)
+    text("Active misiles: " + str(contActiveMisiles), TEXTWIDTHSTART, WINDOWSHEIGHT * 0.2, fontText)
+    text("Misile Impact: " + str(contMisileImpact), TEXTWIDTHSTART, WINDOWSHEIGHT * 0.3, fontText)
+    text("Misiles destroyed: " + str(contMisilesDestroyed), TEXTWIDTHSTART, WINDOWSHEIGHT * 0.45, fontText)
+    text("Active cities: " + str(contActiveCities), TEXTWIDTHSTART, WINDOWSHEIGHT * 0.6, fontText)
+    text("Cities destroyed: " + str(CitiesDestroyed), TEXTWIDTHSTART, WINDOWSHEIGHT * 0.7, fontText)
 
     pygame.display.update()
 
@@ -70,12 +82,24 @@ def drawEnemyMisile(enemies):
             color = (0,170,0)
         else:
             color = (0,0,0)
+        #Las restas a las posiciones es para centrar la foto en el punto
         pygame.draw.circle(win,color,(enemy.position.positionX - int(CIRCLESIZE / 2),enemy.position.positionY - int(CIRCLESIZE / 2)),CIRCLESIZE,CIRCLESIZE)
 
 def drawStrategicLocations(strategicLocations):
     for city in strategicLocations:
+        # Las restas a las posiciones es para centrar la foto en el punto
         win.blit(cityPicture, (city.position.positionX - int(CITYPICTURESIZE / 2), city.position.positionY - int(CITYPICTURESIZE / 2)))
 
+def drawRadarPanel(fontNumbers):
+    color = (0,170,0)
+    pygame.draw.circle(win, color,(MAPWIDTHLIMIT / 2, WINDOWSHEIGHT / 2), FIRSTCIRCLERADAR, 4)
+    pygame.draw.circle(win, color,(MAPWIDTHLIMIT / 2, WINDOWSHEIGHT / 2), SECONDCIRCLERADAR, 4)
+    pygame.draw.circle(win, color,(MAPWIDTHLIMIT / 2, WINDOWSHEIGHT / 2), THIRDCIRCLERADAR, 4)
+    pygame.draw.circle(win, color,(MAPWIDTHLIMIT / 2, WINDOWSHEIGHT / 2), FOURTHCIRCLERADAR, 4)
+
+    for number in range(0, 360, 45):
+        positionNumbers = convert_degrees(FOURTHCIRCLERADAR + 20, number)
+        text(str(number), positionNumbers[0], positionNumbers[1], fontNumbers)
 
 def spawnEnemyMisiles(enemies, strategicLocations):
     if len(enemies) < 2:
@@ -107,18 +131,14 @@ def spawnStrategicLocations(strategicLocations):
 
 
 if __name__ == "__main__":
-    print(pygame.font.get_fonts())
     enemies = []
     strategicLocations = []
     win = pygame.display.set_mode((WINDOWSWIDTH, WINDOWSHEIGHT))
 
-    radarBackground = pygame.image.load('radar.png').convert_alpha()
-    radarBackground = pygame.transform.scale(radarBackground, (WINDOWSHEIGHT, WINDOWSHEIGHT))
-
-    cityPicture = pygame.image.load('city.png').convert_alpha()
+    cityPicture = pygame.image.load('./img/city.png').convert_alpha()
     cityPicture = pygame.transform.scale(cityPicture, (CITYPICTURESIZE, CITYPICTURESIZE))
 
-    radarPanel = pygame.image.load('panel.png').convert_alpha()
+    radarPanel = pygame.image.load('./img/panel.png').convert_alpha()
     radarPanel = pygame.transform.scale(radarPanel, (WINDOWSWIDTH - MAPWIDTHLIMIT, WINDOWSHEIGHT))
 
     for _ in range(5):
