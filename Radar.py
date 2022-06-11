@@ -1,6 +1,7 @@
 from Position import positionClass
 from collections import defaultdict
 
+
 class RadarClass(object):
 
     def __init__(self, pos, widthRange, heightRange):
@@ -8,7 +9,8 @@ class RadarClass(object):
         self.radarWidthRange = [widthRange[0], widthRange[1]]
         self.radarHeightRange = [heightRange[0], heightRange[1]]
         self.missilesDetected = 0
-        self.enemyMissileData = defaultdict(list)
+        self.enemyMissileFistAndLastPoint = defaultdict(list)
+        self.firstTwoEnemyMissiles = defaultdict(list)
 
     def detectMissiles(self, enemyMissiles):
         for missile in enemyMissiles:
@@ -16,9 +18,9 @@ class RadarClass(object):
                     and self.radarHeightRange[0] < missile.position.positionY < self.radarHeightRange[1]:
                 enemyMissilePosition = [missile.position.positionX, missile.position.positionY,
                                         missile.position.positionZ]
-                if len(self.enemyMissileData[missile.id]) == 2:
-                    self.enemyMissileData[missile.id].pop()
-                    self.enemyMissileData[missile.id].append(enemyMissilePosition)
+                if len(self.enemyMissileFistAndLastPoint[missile.id]) == 2:
+                    self.enemyMissileFistAndLastPoint[missile.id].pop()
+                    self.enemyMissileFistAndLastPoint[missile.id].append(enemyMissilePosition)
                 else:
-                    self.enemyMissileData[missile.id].append(enemyMissilePosition)
+                    self.enemyMissileFistAndLastPoint[missile.id].append(enemyMissilePosition)
 

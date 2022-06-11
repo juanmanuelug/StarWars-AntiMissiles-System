@@ -21,26 +21,26 @@ class EnemyMissileClass(object):
         self.calculateNormalizeObjectivePositionVector()
 
     def isInObjectiveX(self):
-        if self.ObjectivePosition.positionX - self.position.positionX < 5:
+        if self.ObjectivePosition.positionX - self.position.positionX <= 1:
             return True
         else:
             return False
 
     def isInObjectiveY(self):
-        if self.ObjectivePosition.positionY - self.position.positionY < 5:
+        if self.ObjectivePosition.positionY - self.position.positionY <= 1:
             return True
         else:
             return False
 
     def isInObjectivePerimeter(self):
-        if (abs(self.ObjectivePosition.positionX - self.position.positionX) <= 5 and
-                abs(self.ObjectivePosition.positionY - self.position.positionY) <= 5):
+        if (abs(self.ObjectivePosition.positionX - self.position.positionX) <= 1 and
+                abs(self.ObjectivePosition.positionY - self.position.positionY) <= 1):
             return True
         else:
             return False
 
     def isInObjectiveAltitude(self):
-        if self.position.positionZ - self.ObjectivePosition.positionZ <= 5:
+        if self.position.positionZ - self.ObjectivePosition.positionZ <= 1:
             return True
         else:
             return False
@@ -75,10 +75,10 @@ class EnemyMissileClass(object):
 
     def goToObjective(self):
         if not self.objectiveImpacted and not self.intercepted:
-            if abs(self.ObjectivePosition.positionX - self.position.positionX) > 5:
+            if abs(self.ObjectivePosition.positionX - self.position.positionX) > 1:
                 self.position.positionX += self.velocity * self.orientation[
                     "x"] * self.normalizePositionObjectiveVector.positionX
-            if abs(self.ObjectivePosition.positionY - self.position.positionY) > 5:
+            if abs(self.ObjectivePosition.positionY - self.position.positionY) > 1:
                 self.position.positionY += self.velocity * self.orientation[
                     "y"] * self.normalizePositionObjectiveVector.positionY
             if self.isInObjectivePerimeter() and not self.isInObjectiveAltitude():
