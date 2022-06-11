@@ -13,6 +13,7 @@ class EnemyMissileClass(object):
         self.velocity = 2
         self.objectiveImpacted = False
         self.intercepted = False
+        self.objectiveStillAlive = False
         self.difPositionWithObjectivePosition = (0, 0, 0)
         self.moduleObjectivePosition = 0
         self.normalizePositionObjectiveVector = (0, 0, 0)

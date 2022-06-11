@@ -9,8 +9,7 @@ class RadarClass(object):
         self.radarWidthRange = [widthRange[0], widthRange[1]]
         self.radarHeightRange = [heightRange[0], heightRange[1]]
         self.missilesDetected = 0
-        self.enemyMissileFistAndLastPoint = defaultdict(list)
-        self.firstTwoEnemyMissiles = defaultdict(list)
+        self.enemyMissileFistAndLastPosition = defaultdict(list)
 
     def detectMissiles(self, enemyMissiles):
         for missile in enemyMissiles:
@@ -18,9 +17,11 @@ class RadarClass(object):
                     and self.radarHeightRange[0] < missile.position.positionY < self.radarHeightRange[1]:
                 enemyMissilePosition = [missile.position.positionX, missile.position.positionY,
                                         missile.position.positionZ]
-                if len(self.enemyMissileFistAndLastPoint[missile.id]) == 2:
-                    self.enemyMissileFistAndLastPoint[missile.id].pop()
-                    self.enemyMissileFistAndLastPoint[missile.id].append(enemyMissilePosition)
+                if len(self.enemyMissileFistAndLastPosition[missile.id]) == 2:
+                    self.enemyMissileFistAndLastPosition[missile.id].pop()
+                    self.enemyMissileFistAndLastPosition[missile.id].append(enemyMissilePosition)
                 else:
-                    self.enemyMissileFistAndLastPoint[missile.id].append(enemyMissilePosition)
+                    self.enemyMissileFistAndLastPosition[missile.id].append(enemyMissilePosition)
 
+    def deleteDeadEnemyMissile(self, enemyId):
+        self.enemyMissileFistAndLastPosition.pop(enemyId)

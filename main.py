@@ -10,6 +10,8 @@ from EnemyMissile import EnemyMissileClass
 from Position import positionClass
 from Radar import RadarClass
 from Interface import InterfaceClass
+from CalculateSystem import CalculateSystemClass
+from CounterMeasureSystem import CounterMeasureSystemClass
 
 pygame.init()
 
@@ -36,6 +38,12 @@ MISSILESSPAWNSUPERIORLIMITHEIGHT = int(WINDOWSHEIGHT)
 DEGRESSPERGRAME = 1
 
 clock = pygame.time.Clock()
+
+
+def cityHit(enemy, strategicLocations):
+    for city in strategicLocations:
+        if enemy.ObjectivePosition.positionX == city.position.positionX and enemy.ObjectivePosition.positionY == city.position.positionY:
+            city.strategicLocationImpacted()
 
 
 def spawnEnemyMissiles(enemies, strategicLocations):
@@ -68,12 +76,22 @@ def spawnStrategicLocations(strategicLocations):
     city = strategicLocationsClass(strategicLocationPosition)
     strategicLocations.append(city)
 
+
 if __name__ == "__main__":
+    calculateSystemPosition = positionClass(MAPWIDTHLIMIT / 2, WINDOWSHEIGHT / 2, 0)
+
     radarPosition = positionClass(MAPWIDTHLIMIT / 2, WINDOWSHEIGHT / 2, 0)
     radarWidthRange = [0, MAPWIDTHLIMIT]
     radarHeightRange = [0, WINDOWSHEIGHT]
 
     radar = RadarClass(radarPosition, radarWidthRange, radarHeightRange)
+
+    counterMeasuresSystems = [CounterMeasureSystemClass(radarPosition, 1),
+                              CounterMeasureSystemClass(positionClass(MAPWIDTHLIMIT , WINDOWSHEIGHT / 2, 0), 0)]
+
+    calculateSystem = CalculateSystemClass(calculateSystemPosition)
+    calculateSystem.setCounterMeasuresPosition(counterMeasuresSystems)
+
     enemies = []
     strategicLocations = []
     interface = InterfaceClass(WINDOWSWIDTH, WINDOWSHEIGHT)
@@ -101,20 +119,36 @@ if __name__ == "__main__":
 
         pool.map_async(radar.detectMissiles(enemies), {})
 
+        pool.map_async(calculateSystem.updateEnemyMissileData(radar.enemyMissileFistAndLastPosition), {})
+
+        pool.map_async(calculateSystem.assignCounterMeasureSystemToEnemyMissile(), {})
+
         if len(strategicLocations) > 0:
             spawnEnemyMissiles(enemies, strategicLocations)
 
         for enemy in enemies:
-            #print(f"id= {enemy.id}, x={enemy.position.positionX} | xobj={enemy.ObjectivePosition.positionX}, y={enemy.position.positionY} | xobj={enemy.ObjectivePosition.positionY} ")
+            # print(f"id= {enemy.id}, x={enemy.position.positionX} | xobj={enemy.ObjectivePosition.positionX}, y={enemy.position.positionY} | xobj={enemy.ObjectivePosition.positionY} ")
             if enemy.getIntercepted():
+                radar.deleteDeadEnemyMissile(enemy.id)
                 enemies.pop(enemies.index(enemy))
                 contMissilesDestroyed += 1
             if enemy.getObjectiveImpacted():
-                interface.CityHit(enemy, strategicLocations)
+                radar.deleteDeadEnemyMissile(enemy.id)
+                cityHit(enemy, strategicLocations)
                 enemies.pop(enemies.index(enemy))
                 contMissileImpact += 1
-
-            pool.map_async(enemy.goToObjective(), {})
+            for city in strategicLocations:
+                if enemy.ObjectivePosition.positionX == city.position.positionX \
+                        and enemy.ObjectivePosition.positionY == city.position.positionY \
+                        and enemy.ObjectivePosition.positionZ == city.position.positionZ:
+                    enemy.objectiveStillAlive = True
+            if enemy.objectiveStillAlive:
+                pool.map_async(enemy.goToObjective(), {})
+                enemy.objectiveStillAlive = False
+            else:
+                radar.deleteDeadEnemyMissile(enemy.id)
+                enemies.pop(enemies.index(enemy))
+                contMissilesDestroyed += 1
 
         for city in strategicLocations:
             if city.getCityStatus():
@@ -125,7 +159,8 @@ if __name__ == "__main__":
         contActiveCities = len(strategicLocations)
         angle += DEGRESSPERGRAME
 
-        interface.drawWindow(contActiveMissiles, contMissilesDestroyed, contActiveCities, contMissileImpact,CitiesDestroyed, enemies,
-                   strategicLocations, angle)
+        interface.drawWindow(contActiveMissiles, contMissilesDestroyed, contActiveCities, contMissileImpact,
+                             CitiesDestroyed, enemies,
+                             strategicLocations, angle)
 
         clock.tick(30)

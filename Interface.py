@@ -35,11 +35,6 @@ class InterfaceClass(object):
 
         return [x + (self.mapWidthLimit / 2), -(y - (self.windowsHeight / 2))]
 
-    def CityHit(self, enemy, strategicLocations):
-        for city in strategicLocations:
-            if enemy.ObjectivePosition.positionX == city.position.positionX and enemy.ObjectivePosition.positionY == city.position.positionY:
-                city.strategicLocationImpacted()
-
     def text(self, text, positionX, positionY, font):
         screenText = font.render(text, True, self.greenColor)
         self.win.blit(screenText, (positionX, positionY))
