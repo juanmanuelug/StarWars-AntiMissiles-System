@@ -49,4 +49,5 @@ class CalculateSystemClass(object):
         return nearestSystemId
 
     def getMissileLastPosition(self, enemyMissileId):
-        return self.enemyMissileData[enemyMissileId][1]
+        if len(self.enemyMissileData[enemyMissileId]) > 1:
+            return self.enemyMissileData[enemyMissileId][1]

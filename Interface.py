@@ -20,14 +20,19 @@ class InterfaceClass(object):
         self.win = pygame.display.set_mode((self.windowsWidth, self.windowsHeight))
         self.cityPictureSize = 40
         self.circleSize = 4
+        self.counterMeasureSystemPictureSize = 30
         self.greenColor = (0, 170, 0)
         self.cityPicture = pygame.image.load('./img/city.png').convert_alpha()
         self.radarPanel = pygame.image.load('./img/panel.png').convert_alpha()
+        self.counterMeasureSystem = pygame.image.load('./img/counterMeasure.png').convert_alpha()
 
     def loadPictures(self):
         self.cityPicture = pygame.transform.scale(self.cityPicture, (self.cityPictureSize, self.cityPictureSize))
         self.radarPanel = pygame.transform.scale(self.radarPanel, (self.windowsWidth - self.mapWidthLimit,
                                                                    self.windowsHeight))
+        self.counterMeasureSystem = pygame.transform.scale(self.counterMeasureSystem,
+                                                           (self.counterMeasureSystemPictureSize,
+                                                            self.counterMeasureSystemPictureSize))
 
     def convert_degrees(self, R, theta):
         y = math.cos(math.pi * theta / 180) * R
@@ -40,9 +45,7 @@ class InterfaceClass(object):
         self.win.blit(screenText, (positionX, positionY))
 
     def drawWindow(self, contActiveMissiles, contMissilesDestroyed, contActiveCities, contMissileImpact,
-                   CitiesDestroyed, enemies,
-                   strategicLocations,
-                   angle):
+                   CitiesDestroyed, enemies, strategicLocations, counterMeasureSystems, counterMeasuresMissiles,angle):
         # fondo de la pantalla
         fontText = pygame.font.Font('./fonts/digital-7.ttf', 35)
         fontNumbers = pygame.font.Font('./fonts/digital-7.ttf', 20)
@@ -53,7 +56,9 @@ class InterfaceClass(object):
         self.drawRadarLine(angle)
         self.drawRadarCircles(fontNumbers)
         self.drawStrategicLocations(strategicLocations)
+        self.drawCounterMeasureSystem(counterMeasureSystems)
         self.drawEnemyMissile(enemies)
+        self.drawCounterMeasureMissiles(counterMeasuresMissiles)
 
         self.text("Active missiles: " + str(contActiveMissiles), self.textWidthStart, self.windowsHeight * 0.2,
                   fontText)
@@ -101,3 +106,22 @@ class InterfaceClass(object):
         R = self.fourthCircleRadar - 3
         pygame.draw.line(self.win, color, (self.mapWidthLimit / 2, self.windowsHeight / 2),
                          self.convert_degrees(R, angle), 4)
+
+    def drawCounterMeasureSystem(self, counterMeasureSystems):
+        for counterMeasureSystem in counterMeasureSystems:
+            # Las restas a las posiciones es para centrar la foto en el punto
+            self.win.blit(self.counterMeasureSystem, (counterMeasureSystem.position.positionX -
+                                                      int(self.counterMeasureSystemPictureSize / 2),
+                                                      counterMeasureSystem.position.positionY -
+                                                      int(self.counterMeasureSystemPictureSize / 2)))
+
+    def drawCounterMeasureMissiles(self, counterMeasuresMissiles):
+        for counterMeasuresMissile in counterMeasuresMissiles:
+            if pygame.time.get_ticks() % 3 == 0:
+                color = (255, 0, 0)
+            else:
+                color = (0, 0, 0)
+            # Las restas a las posiciones es para centrar la foto en el punto
+            pygame.draw.circle(self.win, color, (counterMeasuresMissile.position.positionX - int(self.circleSize / 2),
+                                                 counterMeasuresMissile.position.positionY - int(self.circleSize / 2)), self.circleSize,
+                               self.circleSize)

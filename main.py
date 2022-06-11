@@ -48,7 +48,7 @@ def cityHit(enemy, strategicLocations):
 
 def spawnEnemyMissiles(enemies, strategicLocations):
     global missileId
-    if len(enemies) < 10:
+    if len(enemies) < 1:
         InferiorX = random.randint(MISSILESSPAWNINFERIORLIMIT, CITYSPAWNINFERIORLIMITWIDTH)
         SuperiorX = random.randint(CITYSPAWNSUPERIORLIMITWIDTH, MISSILESSPAWNSUPERIORLIMITWIDTH)
 
@@ -77,6 +77,15 @@ def spawnStrategicLocations(strategicLocations):
     strategicLocations.append(city)
 
 
+def spawnCounterMeasuresSystems(counterMeasuresSystems):
+    x = random.randint(CITYSPAWNINFERIORLIMITWIDTH, CITYSPAWNSUPERIORLIMITWIDTH)
+    y = random.randint(CITYSPAWNINFERIORLIMITHEIGHT, CITYSPAWNSUPERIORLIMITHEIGHT)
+    z = random.randint(0, 50)
+    counterMeasuresSystemPosition = positionClass(x, y, z)
+    counterMeasureSystem = CounterMeasureSystemClass(counterMeasuresSystemPosition, len(counterMeasuresSystems))
+    counterMeasuresSystems.append(counterMeasureSystem)
+
+
 if __name__ == "__main__":
     calculateSystemPosition = positionClass(MAPWIDTHLIMIT / 2, WINDOWSHEIGHT / 2, 0)
 
@@ -86,11 +95,8 @@ if __name__ == "__main__":
 
     radar = RadarClass(radarPosition, radarWidthRange, radarHeightRange)
 
-    counterMeasuresSystems = [CounterMeasureSystemClass(radarPosition, 1),
-                              CounterMeasureSystemClass(positionClass(MAPWIDTHLIMIT , WINDOWSHEIGHT / 2, 0), 0)]
-
-    calculateSystem = CalculateSystemClass(calculateSystemPosition)
-    calculateSystem.setCounterMeasuresPosition(counterMeasuresSystems)
+    counterMeasuresMissiles = []
+    counterMeasuresSystems = []
 
     enemies = []
     strategicLocations = []
@@ -98,6 +104,12 @@ if __name__ == "__main__":
 
     for _ in range(5):
         spawnStrategicLocations(strategicLocations)
+
+    for _ in range(3):
+        spawnCounterMeasuresSystems(counterMeasuresSystems)
+
+    calculateSystem = CalculateSystemClass(calculateSystemPosition)
+    calculateSystem.setCounterMeasuresPosition(counterMeasuresSystems)
 
     run = True
 
@@ -123,11 +135,26 @@ if __name__ == "__main__":
 
         pool.map_async(calculateSystem.assignCounterMeasureSystemToEnemyMissile(), {})
 
+        for counterMeasuresSystem in counterMeasuresSystems:
+            pool.map_async(counterMeasuresSystem.updateEnemyMissileAssignedData(calculateSystem.enemyMissileData,
+                                                                                calculateSystem.counterMeasuresAssignedToEnemyMissile),{})
+            actualTime = pygame.time.get_ticks()
+            pool.map_async(counterMeasuresSystem.launchCounterMeasure(counterMeasuresMissiles, actualTime), {})
+
+        for counterMeasuresMissile in list(counterMeasuresMissiles):
+            pool.map_async(counterMeasuresMissile.updateObjectivePosition(counterMeasuresSystems[counterMeasuresMissile.counterMeasureSystemId].enemyMissilesAssigned), {})
+            pool.map_async(counterMeasuresMissile.goToObjective(), {})
+
+            if counterMeasuresMissile.enemyMissileIntersected:
+                for enemy in enemies:
+                    if enemy.id == counterMeasuresMissile.enemyId:
+                        enemy.hasBeenIntersected()
+                counterMeasuresMissiles.pop(counterMeasuresMissiles.index(counterMeasuresMissile))
+
         if len(strategicLocations) > 0:
             spawnEnemyMissiles(enemies, strategicLocations)
 
         for enemy in enemies:
-            # print(f"id= {enemy.id}, x={enemy.position.positionX} | xobj={enemy.ObjectivePosition.positionX}, y={enemy.position.positionY} | xobj={enemy.ObjectivePosition.positionY} ")
             if enemy.getIntercepted():
                 radar.deleteDeadEnemyMissile(enemy.id)
                 enemies.pop(enemies.index(enemy))
@@ -148,7 +175,6 @@ if __name__ == "__main__":
             else:
                 radar.deleteDeadEnemyMissile(enemy.id)
                 enemies.pop(enemies.index(enemy))
-                contMissilesDestroyed += 1
 
         for city in strategicLocations:
             if city.getCityStatus():
@@ -160,7 +186,7 @@ if __name__ == "__main__":
         angle += DEGRESSPERGRAME
 
         interface.drawWindow(contActiveMissiles, contMissilesDestroyed, contActiveCities, contMissileImpact,
-                             CitiesDestroyed, enemies,
-                             strategicLocations, angle)
+                             CitiesDestroyed, enemies, strategicLocations, counterMeasuresSystems,
+                             counterMeasuresMissiles, angle)
 
         clock.tick(30)
