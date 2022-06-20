@@ -12,7 +12,7 @@ class CounterMeasuresMissileClass(object):
         self.enemyId = enemyId
         self.velocity = 6
         self.orientation = self.getObjectiveDirection(self.position, self.objectivePosition)
-        self.enemyMissileIntersected = False
+        self.enemyMissileIntercepted = False
         self.difPositionWithObjectivePosition = (0, 0, 0)
         self.moduleObjectivePosition = 0
         self.normalizePositionObjectiveVector = (0, 0, 0)
@@ -29,11 +29,11 @@ class CounterMeasuresMissileClass(object):
                 self.objectivePosition = newObjectivePosition
                 self.orientation = self.getObjectiveDirection(self.position, self.objectivePosition)
 
-    def isEnemyMissileIntersected(self):
+    def isEnemyMissileIntercepted(self):
         if abs(self.position.positionX - self.objectivePosition.positionX) <= 5 \
                 and abs(self.position.positionY - self.objectivePosition.positionY) <= 5 \
                 and abs(self.position.positionZ - self.objectivePosition.positionZ) <= 5:
-            self.enemyMissileIntersected = True
+            self.enemyMissileIntercepted = True
 
     def getObjectiveDirection(self, myPosition, ObjPosition):
         direction = {"x": 1, "y": 1, "z": 1}
@@ -55,7 +55,7 @@ class CounterMeasuresMissileClass(object):
         return direction
 
     def goToObjective(self):
-        if not self.enemyMissileIntersected:
+        if not self.enemyMissileIntercepted:
             if abs(self.objectivePosition.positionX - self.position.positionX) > 3:
                 self.position.positionX += self.velocity * self.orientation["x"] \
                                            * self.normalizePositionObjectiveVector.positionX
@@ -65,7 +65,7 @@ class CounterMeasuresMissileClass(object):
             if abs(self.objectivePosition.positionZ - self.position.positionZ) > 3:
                 self.position.positionZ += self.velocity * self.orientation["z"] \
                                            * self.normalizePositionObjectiveVector.positionZ
-            self.isEnemyMissileIntersected()
+            self.isEnemyMissileIntercepted()
 
     def calculateDifferenceWithObjectivePosition(self):
         self.difPositionWithObjectivePosition = positionClass(

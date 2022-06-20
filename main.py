@@ -63,17 +63,20 @@ def spawnEnemyMissiles(enemies, strategicLocations):
         ObjpositionRandom = positionClass(strategicLocations[x].position.positionX,
                                           strategicLocations[x].position.positionY,
                                           strategicLocations[x].position.positionZ)
-        enemy = EnemyMissileClass(positionRandom, ObjpositionRandom, missileId)
+        ObjIdRandom = strategicLocations[x].id
+        enemy = EnemyMissileClass(positionRandom, ObjpositionRandom, missileId, ObjIdRandom)
         missileId += 1
         enemies.append(enemy)
 
 
 def spawnStrategicLocations(strategicLocations):
+    global cityId
     x = random.randint(CITYSPAWNINFERIORLIMITWIDTH, CITYSPAWNSUPERIORLIMITWIDTH)
     y = random.randint(CITYSPAWNINFERIORLIMITHEIGHT, CITYSPAWNSUPERIORLIMITHEIGHT)
     z = random.randint(0, 50)
     strategicLocationPosition = positionClass(x, y, z)
-    city = strategicLocationsClass(strategicLocationPosition)
+    city = strategicLocationsClass(cityId, strategicLocationPosition)
+    cityId += 1
     strategicLocations.append(city)
 
 
@@ -87,6 +90,15 @@ def spawnCounterMeasuresSystems(counterMeasuresSystems):
 
 
 if __name__ == "__main__":
+    contActiveMissiles = 0
+    contMissileImpact = 0
+    contMissilesDestroyed = 0
+    contActiveCities = 0
+    CitiesDestroyed = 0
+    angle = 0
+    missileId = 0
+    cityId = 0
+
     calculateSystemPosition = positionClass(MAPWIDTHLIMIT / 2, WINDOWSHEIGHT / 2, 0)
 
     radarPosition = positionClass(MAPWIDTHLIMIT / 2, WINDOWSHEIGHT / 2, 0)
@@ -113,14 +125,6 @@ if __name__ == "__main__":
 
     run = True
 
-    contActiveMissiles = 0
-    contMissileImpact = 0
-    contMissilesDestroyed = 0
-    contActiveCities = 0
-    CitiesDestroyed = 0
-    angle = 0
-    missileId = 0
-
     pool = multiprocess.Pool(processes=4)
 
     while run:
@@ -145,10 +149,10 @@ if __name__ == "__main__":
             pool.map_async(counterMeasuresMissile.updateObjectivePosition(counterMeasuresSystems[counterMeasuresMissile.counterMeasureSystemId].enemyMissilesAssigned), {})
             pool.map_async(counterMeasuresMissile.goToObjective(), {})
 
-            if counterMeasuresMissile.enemyMissileIntersected:
+            if counterMeasuresMissile.enemyMissileIntercepted:
                 for enemy in enemies:
                     if enemy.id == counterMeasuresMissile.enemyId:
-                        enemy.hasBeenIntersected()
+                        enemy.hasBeenIntercepted()
                 counterMeasuresMissiles.pop(counterMeasuresMissiles.index(counterMeasuresMissile))
 
         if len(strategicLocations) > 0:

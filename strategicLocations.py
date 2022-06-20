@@ -3,7 +3,8 @@ from Position import positionClass
 
 class strategicLocationsClass(object):
 
-    def __init__(self, pos):
+    def __init__(self, id, pos):
+        self.id = id
         self.position = positionClass(pos.positionX, pos.positionY, pos.positionZ)
         self.lifes = 5
         self.destroyed = False

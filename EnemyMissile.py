@@ -5,8 +5,9 @@ from Position import positionClass
 
 class EnemyMissileClass(object):
 
-    def __init__(self, pos, ObjPosition, id):
+    def __init__(self, pos, ObjPosition, id, objId):
         self.id = id
+        self.objectiveId = objId
         self.position = positionClass(pos.positionX, pos.positionY, pos.positionZ)
         self.ObjectivePosition = positionClass(ObjPosition.positionX, ObjPosition.positionY, ObjPosition.positionZ)
         self.orientation = self.getObjectiveDirection(pos, ObjPosition)
@@ -50,7 +51,7 @@ class EnemyMissileClass(object):
         if self.isInObjectiveX() and self.isInObjectiveY() and self.isInObjectiveAltitude():
             self.objectiveImpacted = True
 
-    def hasBeenIntersected(self):
+    def hasBeenIntercepted(self):
         self.intercepted = True
 
     def getObjectiveImpacted(self):

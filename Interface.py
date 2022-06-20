@@ -47,7 +47,7 @@ class InterfaceClass(object):
     def drawWindow(self, contActiveMissiles, contMissilesDestroyed, contActiveCities, contMissileImpact,
                    CitiesDestroyed, enemies, strategicLocations, counterMeasureSystems, counterMeasuresMissiles,angle):
         # fondo de la pantalla
-        fontText = pygame.font.Font('./fonts/digital-7.ttf', 35)
+        fontText = pygame.font.Font('./fonts/digital-7.ttf', 25)
         fontNumbers = pygame.font.Font('./fonts/digital-7.ttf', 20)
         self.loadPictures()
         self.win.fill((0, 0, 0))  # limpieza de la pantalla

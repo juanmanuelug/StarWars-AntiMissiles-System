@@ -11,7 +11,7 @@ class CalculateSystemClass(object):
         self.activeMissiles = 0
         self.enemyMissileData = defaultdict(list)
         self.counterMeasuresPositions = defaultdict(list)
-        self.counterMeasuresAssignedToEnemyMissile = {}
+        self.counterMeasuresAssignedToEnemyMissile = {} #idMissile, idCounterMeasureSystem
 
     def updateEnemyMissileData(self, enemyData):
         self.enemyMissileData = enemyData

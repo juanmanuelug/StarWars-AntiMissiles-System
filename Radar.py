@@ -22,6 +22,7 @@ class RadarClass(object):
                     self.enemyMissileFistAndLastPosition[missile.id].append(enemyMissilePosition)
                 else:
                     self.enemyMissileFistAndLastPosition[missile.id].append(enemyMissilePosition)
+        self.missilesDetected = len(self.enemyMissileFistAndLastPosition)
 
     def deleteDeadEnemyMissile(self, enemyId):
         self.enemyMissileFistAndLastPosition.pop(enemyId)
