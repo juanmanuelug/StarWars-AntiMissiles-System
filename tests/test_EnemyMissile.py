@@ -28,7 +28,7 @@ class TestEnemyMissile(unittest.TestCase):
     def testEnemyMissileStatusChangeAfterGetImpacted(self):
         self.assertFalse(self.enemyMissile.intercepted)
 
-        self.enemyMissile.hasBeenIntersected()
+        self.enemyMissile.hasBeenIntercepted()
 
         self.assertTrue(self.enemyMissile.intercepted)
 
