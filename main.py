@@ -12,6 +12,7 @@ from Radar import RadarClass
 from Interface import InterfaceClass
 from CalculateSystem import CalculateSystemClass
 from CounterMeasureSystem import CounterMeasureSystemClass
+from ConfigurationWindows import *
 
 pygame.init()
 
@@ -35,7 +36,7 @@ MISSILESSPAWNINFERIORLIMIT = 0
 MISSILESSPAWNSUPERIORLIMITWIDTH = int(MAPWIDTHLIMIT)
 MISSILESSPAWNSUPERIORLIMITHEIGHT = int(WINDOWSHEIGHT)
 
-DEGRESSPERGRAME = 1
+DEGRESSPERFRAME = 1
 
 clock = pygame.time.Clock()
 
@@ -187,7 +188,7 @@ if __name__ == "__main__":
 
         contActiveMissiles = len(enemies)
         contActiveCities = len(strategicLocations)
-        angle += DEGRESSPERGRAME
+        angle += DEGRESSPERFRAME
 
         interface.drawWindow(contActiveMissiles, contMissilesDestroyed, contActiveCities, contMissileImpact,
                              CitiesDestroyed, enemies, strategicLocations, counterMeasuresSystems,
