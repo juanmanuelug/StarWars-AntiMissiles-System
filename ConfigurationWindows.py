@@ -3,11 +3,9 @@ from tkinter import Label, Button, messagebox, Entry, Tk
 import pyglet
 import Position
 
-pyglet.font.add_file('./fonts/digital-7.ttf')
-
 citiesIdPositionGlobal = {}
 counterMeasuresIdPositionGlobal = {}
-enemyMissileMaxNumber = 0
+enemyMissileMaxNumber = []
 
 
 class ConfigurationWindowsClass(object):
@@ -27,6 +25,7 @@ class ConfigurationWindowsClass(object):
         self.PosSuperiorLimitX = PosSuperiorLimitX
         self.PosSuperiorLimitY = PosSuperiorLimitY
         self.PosSuperiorLimitZ = 50
+        pyglet.font.add_file('./fonts/digital-7.ttf')
 
     def clear_frame(self):
         for widgets in self.window.winfo_children():
@@ -150,14 +149,17 @@ class ConfigurationWindowsClass(object):
         global enemyMissileMaxNumber
         if self.numberEntriesNotEmpty():
             if self.numberEntriesAreInteger():
-                enemyMissileMaxNumber = int(self.enemyMissileNumberEntry.get())
+                enemyMissileMaxNumber.append(int(self.enemyMissileNumberEntry.get()))
                 cityNumber = int(self.cityNumberEntry.get())
                 counterMeasureNumber = int(self.counterMeasuresNumberEntry.get())
+
                 self.clear_frame()
+
                 y = 10
                 self.setLegend(f"Limit X [{self.PosInferiorLimitX}, {self.PosSuperiorLimitX}]", 10, y)
                 self.setLegend(f"Limit Y [{self.PosInferiorLimitY}, {self.PosSuperiorLimitY}]", 140, y)
                 self.setLegend(f"Limit Z [{self.PosInferiorLimitZ}, {self.PosSuperiorLimitZ}]", 270, y)
+
                 yCities = y + 30
                 for i in range(cityNumber):
                     self.generateLabel(f"city {i}", 10, yCities)
@@ -231,7 +233,3 @@ class ConfigurationWindowsClass(object):
         self.window.mainloop()
 
 
-window = ConfigurationWindowsClass(400, 400, 0, 0, 500, 500)
-window.launchInterface()
-
-print(enemyMissileMaxNumber)

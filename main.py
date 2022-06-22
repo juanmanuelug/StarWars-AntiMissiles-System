@@ -12,7 +12,8 @@ from Radar import RadarClass
 from Interface import InterfaceClass
 from CalculateSystem import CalculateSystemClass
 from CounterMeasureSystem import CounterMeasureSystemClass
-from ConfigurationWindows import *
+from ConfigurationWindows import citiesIdPositionGlobal, counterMeasuresIdPositionGlobal, \
+    enemyMissileMaxNumber, ConfigurationWindowsClass
 
 pygame.init()
 
@@ -47,9 +48,9 @@ def cityHit(enemy, strategicLocations):
             city.strategicLocationImpacted()
 
 
-def spawnEnemyMissiles(enemies, strategicLocations):
+def spawnEnemyMissiles(enemies, strategicLocations, enemyMissileMaxNumber):
     global missileId
-    if len(enemies) < 1:
+    if len(enemies) < enemyMissileMaxNumber:
         InferiorX = random.randint(MISSILESSPAWNINFERIORLIMIT, CITYSPAWNINFERIORLIMITWIDTH)
         SuperiorX = random.randint(CITYSPAWNSUPERIORLIMITWIDTH, MISSILESSPAWNSUPERIORLIMITWIDTH)
 
@@ -70,24 +71,26 @@ def spawnEnemyMissiles(enemies, strategicLocations):
         enemies.append(enemy)
 
 
-def spawnStrategicLocations(strategicLocations):
+def spawnStrategicLocations(strategicLocations, citiesIdPositionGlobal):
     global cityId
-    x = random.randint(CITYSPAWNINFERIORLIMITWIDTH, CITYSPAWNSUPERIORLIMITWIDTH)
-    y = random.randint(CITYSPAWNINFERIORLIMITHEIGHT, CITYSPAWNSUPERIORLIMITHEIGHT)
-    z = random.randint(0, 50)
-    strategicLocationPosition = positionClass(x, y, z)
-    city = strategicLocationsClass(cityId, strategicLocationPosition)
-    cityId += 1
-    strategicLocations.append(city)
+    for i in citiesIdPositionGlobal:
+        x = citiesIdPositionGlobal[i].positionX
+        y = citiesIdPositionGlobal[i].positionY
+        z = citiesIdPositionGlobal[i].positionZ
+        strategicLocationPosition = positionClass(x, y, z)
+        city = strategicLocationsClass(cityId, strategicLocationPosition)
+        cityId += 1
+        strategicLocations.append(city)
 
 
-def spawnCounterMeasuresSystems(counterMeasuresSystems):
-    x = random.randint(CITYSPAWNINFERIORLIMITWIDTH, CITYSPAWNSUPERIORLIMITWIDTH)
-    y = random.randint(CITYSPAWNINFERIORLIMITHEIGHT, CITYSPAWNSUPERIORLIMITHEIGHT)
-    z = random.randint(0, 50)
-    counterMeasuresSystemPosition = positionClass(x, y, z)
-    counterMeasureSystem = CounterMeasureSystemClass(counterMeasuresSystemPosition, len(counterMeasuresSystems))
-    counterMeasuresSystems.append(counterMeasureSystem)
+def spawnCounterMeasuresSystems(counterMeasuresSystems, counterMeasuresIdPositionGlobal):
+    for i in counterMeasuresIdPositionGlobal:
+        x = counterMeasuresIdPositionGlobal[i].positionX
+        y = counterMeasuresIdPositionGlobal[i].positionY
+        z = counterMeasuresIdPositionGlobal[i].positionZ
+        counterMeasuresSystemPosition = positionClass(x, y, z)
+        counterMeasureSystem = CounterMeasureSystemClass(counterMeasuresSystemPosition, len(counterMeasuresSystems))
+        counterMeasuresSystems.append(counterMeasureSystem)
 
 
 if __name__ == "__main__":
@@ -100,6 +103,7 @@ if __name__ == "__main__":
     missileId = 0
     cityId = 0
 
+
     calculateSystemPosition = positionClass(MAPWIDTHLIMIT / 2, WINDOWSHEIGHT / 2, 0)
 
     radarPosition = positionClass(MAPWIDTHLIMIT / 2, WINDOWSHEIGHT / 2, 0)
@@ -108,18 +112,22 @@ if __name__ == "__main__":
 
     radar = RadarClass(radarPosition, radarWidthRange, radarHeightRange)
 
-    counterMeasuresMissiles = []
-    counterMeasuresSystems = []
-
-    enemies = []
-    strategicLocations = []
     interface = InterfaceClass(WINDOWSWIDTH, WINDOWSHEIGHT)
 
-    for _ in range(5):
-        spawnStrategicLocations(strategicLocations)
+    configWindow = ConfigurationWindowsClass(400, 400, CITYSPAWNINFERIORLIMITWIDTH, CITYSPAWNINFERIORLIMITHEIGHT,
+                                             CITYSPAWNSUPERIORLIMITWIDTH, CITYSPAWNSUPERIORLIMITHEIGHT)
 
-    for _ in range(3):
-        spawnCounterMeasuresSystems(counterMeasuresSystems)
+    configWindow.launchInterface()
+
+    counterMeasuresMissiles = []
+    counterMeasuresSystems = []
+    enemies = []
+    strategicLocations = []
+
+
+    spawnStrategicLocations(strategicLocations, citiesIdPositionGlobal)
+
+    spawnCounterMeasuresSystems(counterMeasuresSystems, counterMeasuresIdPositionGlobal)
 
     calculateSystem = CalculateSystemClass(calculateSystemPosition)
     calculateSystem.setCounterMeasuresPosition(counterMeasuresSystems)
@@ -157,7 +165,7 @@ if __name__ == "__main__":
                 counterMeasuresMissiles.pop(counterMeasuresMissiles.index(counterMeasuresMissile))
 
         if len(strategicLocations) > 0:
-            spawnEnemyMissiles(enemies, strategicLocations)
+            spawnEnemyMissiles(enemies, strategicLocations, enemyMissileMaxNumber[0])
 
         for enemy in enemies:
             if enemy.getIntercepted():
