@@ -55,6 +55,9 @@ class CounterMeasuresMissileClass(object):
         return direction
 
     def goToObjective(self):
+        self.calculateDifferenceWithObjectivePosition()
+        self.calculateModuleOfObjectivePosition()
+        self.calculateNormalizeObjectivePositionVector()
         if not self.enemyMissileIntercepted:
             if abs(self.objectivePosition.positionX - self.position.positionX) > 3:
                 self.position.positionX += self.velocity * self.orientation["x"] \
