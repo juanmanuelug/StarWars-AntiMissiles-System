@@ -96,6 +96,7 @@ if __name__ == "__main__":
     angle = 0
     missileId = 0
     cityId = 0
+    FPS = 30
 
 
     calculateSystemPosition = positionClass(MAPWIDTHLIMIT / 2, WINDOWSHEIGHT / 2, 0)
@@ -123,6 +124,7 @@ if __name__ == "__main__":
     calculateSystem.setCounterMeasuresPosition(counterMeasuresSystems)
 
     run = True
+    pause = False
 
     pool = multiprocess.Pool(processes=4)
 
@@ -131,6 +133,26 @@ if __name__ == "__main__":
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
+            if event.type == pygame.KEYDOWN:
+                pressed = pygame.key.get_pressed()
+                if pressed[pygame.K_w]:
+                    print(f"A={FPS}")
+                    if FPS < 30:
+                        FPS += 10
+                if pressed[pygame.K_s]:
+                    if FPS > 10:
+                        FPS -= 10
+                if pressed[pygame.K_SPACE]:
+                    pause = not pause
+
+            while pause:
+                for e in pygame.event.get():
+                    if e.type == pygame.QUIT:
+                        run = False
+                    if e.type == pygame.KEYDOWN:
+                        pressed = pygame.key.get_pressed()
+                        if pressed[pygame.K_SPACE]:
+                            pause = not pause
 
         if len(strategicLocations) > 0:
             spawnEnemyMissiles(enemies, strategicLocations, 1)
@@ -195,4 +217,4 @@ if __name__ == "__main__":
                              CitiesDestroyed, enemies, strategicLocations, counterMeasuresSystems,
                              counterMeasuresMissiles, angle, enemiesDestroyedPositions)
 
-        clock.tick(30)
+        clock.tick(FPS)

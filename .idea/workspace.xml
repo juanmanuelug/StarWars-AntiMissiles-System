@@ -26,7 +26,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
   </component>
-  <component name="RunManager" selected="Python tests.Unittests in tests">
+  <component name="RunManager" selected="Python.main_withoutConfig">
     <configuration name="Interface" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="StarWars-AntiMissiles-System" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -127,8 +127,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python tests.Unittests in tests" />
         <item itemvalue="Python.main_withoutConfig" />
+        <item itemvalue="Python tests.Unittests in tests" />
         <item itemvalue="Python.Interface" />
         <item itemvalue="Python.main" />
         <item itemvalue="Python.main_withoutConfig (1)" />
@@ -137,22 +137,22 @@
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="WindowStateProjectService">
-    <state width="1345" height="188" key="GridCell.Tab.0.bottom" timestamp="1658941760433">
+    <state width="1345" height="188" key="GridCell.Tab.0.bottom" timestamp="1658943141941">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="1345" height="188" key="GridCell.Tab.0.bottom/0.0.1366.728/1366.0.1920.1040@0.0.1366.728" timestamp="1658941760433" />
-    <state width="1345" height="188" key="GridCell.Tab.0.center" timestamp="1658941760433">
+    <state width="1345" height="188" key="GridCell.Tab.0.bottom/0.0.1366.728/1366.0.1920.1040@0.0.1366.728" timestamp="1658943141941" />
+    <state width="1345" height="188" key="GridCell.Tab.0.center" timestamp="1658943141941">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="1345" height="188" key="GridCell.Tab.0.center/0.0.1366.728/1366.0.1920.1040@0.0.1366.728" timestamp="1658941760433" />
-    <state width="1345" height="188" key="GridCell.Tab.0.left" timestamp="1658941760433">
+    <state width="1345" height="188" key="GridCell.Tab.0.center/0.0.1366.728/1366.0.1920.1040@0.0.1366.728" timestamp="1658943141941" />
+    <state width="1345" height="188" key="GridCell.Tab.0.left" timestamp="1658943141941">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="1345" height="188" key="GridCell.Tab.0.left/0.0.1366.728/1366.0.1920.1040@0.0.1366.728" timestamp="1658941760433" />
-    <state width="1345" height="188" key="GridCell.Tab.0.right" timestamp="1658941760433">
+    <state width="1345" height="188" key="GridCell.Tab.0.left/0.0.1366.728/1366.0.1920.1040@0.0.1366.728" timestamp="1658943141941" />
+    <state width="1345" height="188" key="GridCell.Tab.0.right" timestamp="1658943141941">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="1345" height="188" key="GridCell.Tab.0.right/0.0.1366.728/1366.0.1920.1040@0.0.1366.728" timestamp="1658941760433" />
+    <state width="1345" height="188" key="GridCell.Tab.0.right/0.0.1366.728/1366.0.1920.1040@0.0.1366.728" timestamp="1658943141941" />
     <state x="500" y="277" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1658939973597">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
