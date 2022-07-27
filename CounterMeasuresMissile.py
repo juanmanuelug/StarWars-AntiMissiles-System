@@ -38,17 +38,17 @@ class CounterMeasuresMissileClass(object):
     def getObjectiveDirection(self, myPosition, ObjPosition):
         direction = {"x": 1, "y": 1, "z": 1}
 
-        if ObjPosition.positionX - myPosition.positionX > 0:
+        if ObjPosition.positionX - myPosition.positionX >= 0:
             direction["x"] = 1
         else:
             direction["x"] = -1
 
-        if ObjPosition.positionY - myPosition.positionY > 0:
+        if ObjPosition.positionY - myPosition.positionY >= 0:
             direction["y"] = 1
         else:
             direction["y"] = -1
 
-        if ObjPosition.positionZ - myPosition.positionZ > 0:
+        if ObjPosition.positionZ - myPosition.positionZ >= 0:
             direction["z"] = 1
         else:
             direction["z"] = -1
@@ -59,15 +59,17 @@ class CounterMeasuresMissileClass(object):
         self.calculateModuleOfObjectivePosition()
         self.calculateNormalizeObjectivePositionVector()
         if not self.enemyMissileIntercepted:
-            if abs(self.objectivePosition.positionX - self.position.positionX) > 3:
-                self.position.positionX += self.velocity * self.orientation["x"] \
-                                           * self.normalizePositionObjectiveVector.positionX
-            if abs(self.objectivePosition.positionY - self.position.positionY) > 3:
-                self.position.positionY += self.velocity * self.orientation["y"] \
-                                           * self.normalizePositionObjectiveVector.positionY
-            if abs(self.objectivePosition.positionZ - self.position.positionZ) > 3:
-                self.position.positionZ += self.velocity * self.orientation["z"] \
-                                           * self.normalizePositionObjectiveVector.positionZ
+            if abs(self.objectivePosition.positionX - self.position.positionX) > 1:
+                self.position.positionX += round(self.velocity * self.orientation["x"] \
+                                           * self.normalizePositionObjectiveVector.positionX, 1)
+                self.position.positionX = round(self.position.positionX, 1)
+            if abs(self.objectivePosition.positionY - self.position.positionY) > 1:
+                self.position.positionY += round(self.velocity * self.orientation["y"] \
+                                           * self.normalizePositionObjectiveVector.positionY, 1)
+                self.position.positionY = round(self.position.positionY, 1)
+            if abs(self.objectivePosition.positionZ - self.position.positionZ) > 1:
+                self.position.positionZ += round(self.velocity * self.orientation["z"] \
+                                           * self.normalizePositionObjectiveVector.positionZ, 1)
             self.isEnemyMissileIntercepted()
 
     def calculateDifferenceWithObjectivePosition(self):

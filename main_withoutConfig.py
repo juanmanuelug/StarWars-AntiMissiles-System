@@ -1,5 +1,3 @@
-import math
-
 import pygame
 import ctypes
 import multiprocessing as multiprocess
@@ -12,8 +10,6 @@ from Radar import RadarClass
 from Interface import InterfaceClass
 from CalculateSystem import CalculateSystemClass
 from CounterMeasureSystem import CounterMeasureSystemClass
-from ConfigurationWindows import citiesIdPositionGlobal, counterMeasuresIdPositionGlobal, \
-    enemyMissileMaxNumber, ConfigurationWindowsClass
 
 pygame.init()
 
@@ -71,26 +67,24 @@ def spawnEnemyMissiles(enemies, strategicLocations, enemyMissileMaxNumber):
         enemies.append(enemy)
 
 
-def spawnStrategicLocations(strategicLocations, citiesIdPositionGlobal):
+def spawnStrategicLocations(strategicLocations):
     global cityId
-    for i in citiesIdPositionGlobal:
-        x = citiesIdPositionGlobal[i].positionX
-        y = citiesIdPositionGlobal[i].positionY
-        z = citiesIdPositionGlobal[i].positionZ
-        strategicLocationPosition = positionClass(x, y, z)
-        city = strategicLocationsClass(cityId, strategicLocationPosition)
-        cityId += 1
-        strategicLocations.append(city)
+    x = random.randint(CITYSPAWNINFERIORLIMITWIDTH, CITYSPAWNSUPERIORLIMITWIDTH)
+    y = random.randint(CITYSPAWNINFERIORLIMITHEIGHT, CITYSPAWNSUPERIORLIMITHEIGHT)
+    z = random.randint(0, 50)
+    strategicLocationPosition = positionClass(x, y, z)
+    city = strategicLocationsClass(cityId, strategicLocationPosition)
+    cityId += 1
+    strategicLocations.append(city)
 
 
-def spawnCounterMeasuresSystems(counterMeasuresSystems, counterMeasuresIdPositionGlobal):
-    for i in counterMeasuresIdPositionGlobal:
-        x = counterMeasuresIdPositionGlobal[i].positionX
-        y = counterMeasuresIdPositionGlobal[i].positionY
-        z = counterMeasuresIdPositionGlobal[i].positionZ
-        counterMeasuresSystemPosition = positionClass(x, y, z)
-        counterMeasureSystem = CounterMeasureSystemClass(counterMeasuresSystemPosition, len(counterMeasuresSystems))
-        counterMeasuresSystems.append(counterMeasureSystem)
+def spawnCounterMeasuresSystems(counterMeasuresSystems):
+    x = random.randint(CITYSPAWNINFERIORLIMITWIDTH, CITYSPAWNSUPERIORLIMITWIDTH)
+    y = random.randint(CITYSPAWNINFERIORLIMITHEIGHT, CITYSPAWNSUPERIORLIMITHEIGHT)
+    z = random.randint(0, 50)
+    counterMeasuresSystemPosition = positionClass(x, y, z)
+    counterMeasureSystem = CounterMeasureSystemClass(counterMeasuresSystemPosition, len(counterMeasuresSystems))
+    counterMeasuresSystems.append(counterMeasureSystem)
 
 
 if __name__ == "__main__":
@@ -114,20 +108,15 @@ if __name__ == "__main__":
 
     interface = InterfaceClass(WINDOWSWIDTH, WINDOWSHEIGHT)
 
-    configWindow = ConfigurationWindowsClass(400, 400, CITYSPAWNINFERIORLIMITWIDTH, CITYSPAWNINFERIORLIMITHEIGHT,
-                                             CITYSPAWNSUPERIORLIMITWIDTH, CITYSPAWNSUPERIORLIMITHEIGHT)
-
-    configWindow.launchInterface()
-
     counterMeasuresMissiles = []
     counterMeasuresSystems = []
     enemies = []
     strategicLocations = []
 
 
-    spawnStrategicLocations(strategicLocations, citiesIdPositionGlobal)
+    spawnStrategicLocations(strategicLocations)
 
-    spawnCounterMeasuresSystems(counterMeasuresSystems, counterMeasuresIdPositionGlobal)
+    spawnCounterMeasuresSystems(counterMeasuresSystems)
 
     calculateSystem = CalculateSystemClass(calculateSystemPosition)
     calculateSystem.setCounterMeasuresPosition(counterMeasuresSystems)
@@ -142,30 +131,8 @@ if __name__ == "__main__":
             if event.type == pygame.QUIT:
                 run = False
 
-        pool.map_async(radar.detectMissiles(enemies), {})
-
-        pool.map_async(calculateSystem.updateEnemyMissileData(radar.enemyMissileFistAndLastPosition), {})
-
-        pool.map_async(calculateSystem.assignCounterMeasureSystemToEnemyMissile(), {})
-
-        for counterMeasuresSystem in counterMeasuresSystems:
-            pool.map_async(counterMeasuresSystem.updateEnemyMissileAssignedData(calculateSystem.enemyMissileData,
-                                                                                calculateSystem.enemyMissilesIdAssignedToCounterMeasuresId), {})
-            actualTime = pygame.time.get_ticks()
-            pool.map_async(counterMeasuresSystem.launchCounterMeasure(counterMeasuresMissiles, actualTime), {})
-
-        for counterMeasuresMissile in list(counterMeasuresMissiles):
-            pool.map_async(counterMeasuresMissile.updateObjectivePosition(counterMeasuresSystems[counterMeasuresMissile.counterMeasureSystemId].enemyMissilesAssigned), {})
-            pool.map_async(counterMeasuresMissile.goToObjective(), {})
-
-            if counterMeasuresMissile.enemyMissileIntercepted:
-                for enemy in enemies:
-                    if enemy.id == counterMeasuresMissile.enemyId:
-                        enemy.hasBeenIntercepted()
-                counterMeasuresMissiles.pop(counterMeasuresMissiles.index(counterMeasuresMissile))
-
         if len(strategicLocations) > 0:
-            spawnEnemyMissiles(enemies, strategicLocations, enemyMissileMaxNumber[0])
+            spawnEnemyMissiles(enemies, strategicLocations, 5)
 
         for enemy in enemies:
             if enemy.getIntercepted():
@@ -183,11 +150,33 @@ if __name__ == "__main__":
                         and enemy.ObjectivePosition.positionZ == city.position.positionZ:
                     enemy.objectiveStillAlive = True
             if enemy.objectiveStillAlive:
-                pool.map_async(enemy.goToObjective(), {})
+                pool.map(enemy.goToObjective(), {})
                 enemy.objectiveStillAlive = False
             else:
                 radar.deleteDeadEnemyMissile(enemy.id)
                 enemies.pop(enemies.index(enemy))
+
+        pool.map(radar.detectMissiles(enemies), {})
+
+        pool.map(calculateSystem.updateEnemyMissileData(radar.enemyMissileFistLastPosition), {})
+
+        pool.map(calculateSystem.assignCounterMeasureSystemToEnemyMissile(), {})
+
+        for counterMeasuresSystem in counterMeasuresSystems:
+            pool.map(counterMeasuresSystem.updateEnemyMissileAssignedData(calculateSystem.enemyMissileData,
+                                                                          calculateSystem.enemyMissilesIdAssignedToCounterMeasuresId), {})
+            actualTime = pygame.time.get_ticks()
+            pool.map(counterMeasuresSystem.launchCounterMeasure(counterMeasuresMissiles, actualTime), {})
+
+        for counterMeasuresMissile in list(counterMeasuresMissiles):
+            pool.map(counterMeasuresMissile.updateObjectivePosition(counterMeasuresSystems[counterMeasuresMissile.counterMeasureSystemId].enemyMissilesAssigned), {})
+            pool.map(counterMeasuresMissile.goToObjective(), {})
+
+            if counterMeasuresMissile.enemyMissileIntercepted:
+                for enemy in enemies:
+                    if enemy.id == counterMeasuresMissile.enemyId:
+                        enemy.hasBeenIntercepted()
+                counterMeasuresMissiles.pop(counterMeasuresMissiles.index(counterMeasuresMissile))
 
         for city in strategicLocations:
             if city.getCityStatus():
