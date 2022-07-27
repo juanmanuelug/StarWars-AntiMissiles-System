@@ -21,7 +21,7 @@ class TestCounterMeasureSystem(unittest.TestCase):
     def testCounterMeasureSystemLaunchACounterMeasureMissileWhenItHasAndAssignedEnemyMissile(self):
         self.counterMeasureSystem.launchCounterMeasure(self.counterMeasuresMissiles, sys.maxsize)
 
-        self.assertGreater(len(self.counterMeasureSystem.counterMeasuresLaunchedAgainstMissile), 0)
+        self.assertGreater(len(self.counterMeasureSystem.enemyMissileIdAssignedToCounterMeasureMissileId), 0)
 
 
 if __name__ == '__main__':

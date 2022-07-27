@@ -8,7 +8,7 @@ class CounterMeasureSystemClass(object):
         self.id = id
         self.position = positionClass(pos.positionX, pos.positionY, pos.positionZ)
         self.enemyMissilesAssigned = defaultdict(list)
-        self.counterMeasuresLaunchedAgainstMissile = {} #idMissile, idCounterMeasure
+        self.enemyMissileIdAssignedToCounterMeasureMissileId = {} #idMissile, idCounterMeasure
         self.idCounterMeasuresMissiles = 0
         self.lastLaunchTime = 0
 
@@ -21,15 +21,15 @@ class CounterMeasureSystemClass(object):
         self.enemyMissilesAssigned = enemyMissiles
 
     def deleteDeadEnemyMissiles(self, enemyMissileData):
-        for enemyMissile in list(self.counterMeasuresLaunchedAgainstMissile):
+        for enemyMissile in list(self.enemyMissileIdAssignedToCounterMeasureMissileId):
             if enemyMissile not in enemyMissileData:
-                self.counterMeasuresLaunchedAgainstMissile.pop(enemyMissile)
+                self.enemyMissileIdAssignedToCounterMeasureMissileId.pop(enemyMissile)
                 self.enemyMissilesAssigned.pop(enemyMissile)
 
     def launchCounterMeasure(self, counterMeasuresMissiles, actualTime):
         if len(self.enemyMissilesAssigned) > 0:
             for enemyMissile in self.enemyMissilesAssigned:
-                if enemyMissile not in self.counterMeasuresLaunchedAgainstMissile:
+                if enemyMissile not in self.enemyMissileIdAssignedToCounterMeasureMissileId:
                     if (actualTime - self.lastLaunchTime) / 1000 > 1:
                         counterMeasuresMissile = CounterMeasuresMissileClass(self.position, self.idCounterMeasuresMissiles,
                                                                              self.id,
@@ -37,5 +37,5 @@ class CounterMeasureSystemClass(object):
                                                                              enemyMissile)
                         counterMeasuresMissiles.append(counterMeasuresMissile)
                         self.idCounterMeasuresMissiles += 1
-                        self.counterMeasuresLaunchedAgainstMissile.update({enemyMissile: self.idCounterMeasuresMissiles})
+                        self.enemyMissileIdAssignedToCounterMeasureMissileId.update({enemyMissile: self.idCounterMeasuresMissiles})
                         self.lastLaunchTime = actualTime

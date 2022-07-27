@@ -22,6 +22,7 @@ class InterfaceClass(object):
         self.circleSize = 4
         self.counterMeasureSystemPictureSize = 30
         self.greenColor = (0, 170, 0)
+        self.redColor = (255, 0, 0)
         self.cityPicture = pygame.image.load('./img/city.png').convert_alpha()
         self.radarPanel = pygame.image.load('./img/panel.png').convert_alpha()
         self.counterMeasureSystem = pygame.image.load('./img/counterMeasure.png').convert_alpha()
@@ -45,7 +46,8 @@ class InterfaceClass(object):
         self.win.blit(screenText, (positionX, positionY))
 
     def drawWindow(self, contActiveMissiles, contMissilesDestroyed, contActiveCities, contMissileImpact,
-                   CitiesDestroyed, enemies, strategicLocations, counterMeasureSystems, counterMeasuresMissiles,angle):
+                   CitiesDestroyed, enemies, strategicLocations, counterMeasureSystems, counterMeasuresMissiles, angle
+                   , enemiesDestroyedPositions):
         # fondo de la pantalla
         fontText = pygame.font.Font('./fonts/digital-7.ttf', 25)
         fontNumbers = pygame.font.Font('./fonts/digital-7.ttf', 20)
@@ -59,6 +61,7 @@ class InterfaceClass(object):
         self.drawCounterMeasureSystem(counterMeasureSystems)
         self.drawEnemyMissile(enemies)
         self.drawCounterMeasureMissiles(counterMeasuresMissiles)
+        self.drawXWhenEnemyMissileIntercepted(enemiesDestroyedPositions)
 
         self.text("Active missiles: " + str(contActiveMissiles), self.textWidthStart, self.windowsHeight * 0.2,
                   fontText)
@@ -72,12 +75,8 @@ class InterfaceClass(object):
 
     def drawEnemyMissile(self, enemies):
         for enemy in enemies:
-            if pygame.time.get_ticks() % 3 == 0 or enemy.isInObjectivePerimeter() == True:
-                color = self.greenColor
-            else:
-                color = (0, 0, 0)
             # Las restas a las posiciones es para centrar la foto en el punto
-            pygame.draw.circle(self.win, color, (enemy.position.positionX - int(self.circleSize / 2),
+            pygame.draw.circle(self.win, self.redColor, (enemy.position.positionX - int(self.circleSize / 2),
                                                  enemy.position.positionY - int(self.circleSize / 2)), self.circleSize,
                                self.circleSize)
 
@@ -117,11 +116,14 @@ class InterfaceClass(object):
 
     def drawCounterMeasureMissiles(self, counterMeasuresMissiles):
         for counterMeasuresMissile in counterMeasuresMissiles:
-            if pygame.time.get_ticks() % 3 == 0:
-                color = (255, 0, 0)
-            else:
-                color = (0, 0, 0)
             # Las restas a las posiciones es para centrar la foto en el punto
-            pygame.draw.circle(self.win, color, (counterMeasuresMissile.position.positionX - int(self.circleSize / 2),
+            pygame.draw.circle(self.win, self.greenColor, (counterMeasuresMissile.position.positionX - int(self.circleSize / 2),
                                                  counterMeasuresMissile.position.positionY - int(self.circleSize / 2)), self.circleSize,
                                self.circleSize)
+
+    def drawXWhenEnemyMissileIntercepted(self, positions):
+        for position in positions:
+            pygame.draw.aaline(self.win,self.redColor,(position.positionX-4, position.positionY-4),
+                               (5+position.positionX-4,5+position.positionY-4))
+            pygame.draw.aaline(self.win,self.redColor,(5+position.positionX-4,position.positionY-4),
+                               (position.positionX-4,5+position.positionY-4))
