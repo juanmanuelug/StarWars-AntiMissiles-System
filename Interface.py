@@ -72,10 +72,10 @@ class InterfaceClass(object):
 
     def drawEnemyMissile(self, enemies):
         for enemy in enemies:
-            #if pygame.time.get_ticks() % 3 == 0 or enemy.isInObjectivePerimeter() == True:
-            color = self.greenColor
-            #else:
-            #    color = (0, 0, 0)
+            if pygame.time.get_ticks() % 3 == 0 or enemy.isInObjectivePerimeter() == True:
+                color = self.greenColor
+            else:
+                color = (0, 0, 0)
             # Las restas a las posiciones es para centrar la foto en el punto
             pygame.draw.circle(self.win, color, (enemy.position.positionX - int(self.circleSize / 2),
                                                  enemy.position.positionY - int(self.circleSize / 2)), self.circleSize,
@@ -117,10 +117,10 @@ class InterfaceClass(object):
 
     def drawCounterMeasureMissiles(self, counterMeasuresMissiles):
         for counterMeasuresMissile in counterMeasuresMissiles:
-            #if pygame.time.get_ticks() % 3 == 0:
-            color = (255, 0, 0)
-            #else:
-            #    color = (0, 0, 0)
+            if pygame.time.get_ticks() % 3 == 0:
+                color = (255, 0, 0)
+            else:
+                color = (0, 0, 0)
             # Las restas a las posiciones es para centrar la foto en el punto
             pygame.draw.circle(self.win, color, (counterMeasuresMissile.position.positionX - int(self.circleSize / 2),
                                                  counterMeasuresMissile.position.positionY - int(self.circleSize / 2)), self.circleSize,

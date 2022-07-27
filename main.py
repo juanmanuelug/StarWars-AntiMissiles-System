@@ -150,7 +150,7 @@ if __name__ == "__main__":
 
         for counterMeasuresSystem in counterMeasuresSystems:
             pool.map_async(counterMeasuresSystem.updateEnemyMissileAssignedData(calculateSystem.enemyMissileData,
-                                                                                calculateSystem.enemyMissilesIdAssignedToCounterMeasuresId), {})
+                                                                                calculateSystem.counterMeasuresAssignedToEnemyMissile),{})
             actualTime = pygame.time.get_ticks()
             pool.map_async(counterMeasuresSystem.launchCounterMeasure(counterMeasuresMissiles, actualTime), {})
 

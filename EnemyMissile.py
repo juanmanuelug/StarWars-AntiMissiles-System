@@ -78,22 +78,18 @@ class EnemyMissileClass(object):
     def goToObjective(self):
         if not self.objectiveImpacted and not self.intercepted:
             if abs(self.ObjectivePosition.positionX - self.position.positionX) > 1:
-                self.position.positionX += round(self.velocity * self.orientation[
-                    "x"] * self.normalizePositionObjectiveVector.positionX, 1)
-                self.position.positionX = round(self.position.positionX, 1)
+                self.position.positionX += self.velocity * self.orientation[
+                    "x"] * self.normalizePositionObjectiveVector.positionX
             if abs(self.ObjectivePosition.positionY - self.position.positionY) > 1:
-                self.position.positionY += round(self.velocity * self.orientation[
-                    "y"] * self.normalizePositionObjectiveVector.positionY, 1)
-                self.position.positionY = round(self.position.positionY, 1)
+                self.position.positionY += self.velocity * self.orientation[
+                    "y"] * self.normalizePositionObjectiveVector.positionY
             if self.isInObjectivePerimeter() and not self.isInObjectiveAltitude():
                 if not self.isInObjectiveX():
-                    self.position.positionX += round(self.velocity * self.orientation[
-                    "x"] * self.normalizePositionObjectiveVector.positionX, 1)
-                    self.position.positionX = round(self.position.positionX, 1)
+                    self.position.positionX += self.velocity * self.orientation[
+                        "x"] * self.normalizePositionObjectiveVector.positionX
                 if not self.isInObjectiveY():
-                    self.position.positionY += round(self.velocity * self.orientation[
-                    "y"] * self.normalizePositionObjectiveVector.positionY, 1)
-                    self.position.positionY = round(self.position.positionY, 1)
+                    self.position.positionY += self.velocity * self.orientation[
+                        "y"] * self.normalizePositionObjectiveVector.positionY
                 self.position.positionZ -= self.velocity * self.normalizePositionObjectiveVector.positionZ
             self.hasReachTheObjective()
 
