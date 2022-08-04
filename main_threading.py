@@ -1,7 +1,7 @@
 import pygame
 import ctypes
-import multiprocessing as multiprocess
 import random
+import threading
 
 from strategicLocations import strategicLocationsClass
 from EnemyMissile import EnemyMissileClass
@@ -46,7 +46,7 @@ def cityHit(enemy, strategicLocations):
 
 def spawnEnemyMissiles(enemies, strategicLocations, enemyMissileMaxNumber):
     global missileId
-    if len(enemies) < enemyMissileMaxNumber:
+    for _ in range(enemyMissileMaxNumber):
         InferiorX = random.randint(MISSILESSPAWNINFERIORLIMIT, CITYSPAWNINFERIORLIMITWIDTH)
         SuperiorX = random.randint(CITYSPAWNSUPERIORLIMITWIDTH, MISSILESSPAWNSUPERIORLIMITWIDTH)
 
@@ -98,7 +98,6 @@ if __name__ == "__main__":
     cityId = 0
     FPS = 30
 
-
     calculateSystemPosition = positionClass(MAPWIDTHLIMIT / 2, WINDOWSHEIGHT / 2, 0)
 
     radarPosition = positionClass(MAPWIDTHLIMIT / 2, WINDOWSHEIGHT / 2, 0)
@@ -114,9 +113,12 @@ if __name__ == "__main__":
     enemies = []
     enemiesDestroyedPositions = []
     strategicLocations = []
-
+    threads = []  # hebras enemigos
+    threadsCounterSystem = []
+    threadsCounterMissile = []
 
     spawnStrategicLocations(strategicLocations)
+
 
     spawnCounterMeasuresSystems(counterMeasuresSystems)
 
@@ -125,11 +127,9 @@ if __name__ == "__main__":
 
     run = True
     pause = False
-
-    pool = multiprocess.Pool(processes=4)
+    hasSpawnMissiles = False
 
     while run:
-        multiprocess.freeze_support()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
@@ -153,9 +153,11 @@ if __name__ == "__main__":
                         pressed = pygame.key.get_pressed()
                         if pressed[pygame.K_SPACE]:
                             pause = not pause
+        startTime = pygame.time.get_ticks()
 
-        if len(strategicLocations) > 0:
-            spawnEnemyMissiles(enemies, strategicLocations, 1)
+        if not hasSpawnMissiles:
+            spawnEnemyMissiles(enemies, strategicLocations, 100)
+            hasSpawnMissiles = True
 
         for enemy in enemies:
             if enemy.getIntercepted():
@@ -175,28 +177,42 @@ if __name__ == "__main__":
                         and enemy.ObjectivePosition.positionZ == city.position.positionZ:
                     enemy.objectiveStillAlive = True
             if enemy.objectiveStillAlive:
-                pool.map(enemy.goToObjective(), {})
+                thread = threading.Thread(target=enemy.goToObjective(), args=())
+                thread.start()
+                threads.append(thread)
                 enemy.objectiveStillAlive = False
             else:
                 if enemy in enemies:
                     radar.deleteDeadEnemyMissile(enemy.id)
                     enemies.pop(enemies.index(enemy))
 
-        pool.map(radar.detectMissiles(enemies), {})
+        for thread in threads:
+            thread.join()
 
-        pool.map(calculateSystem.updateEnemyMissileData(radar.enemyMissileLastPosition), {})
+        radar.detectMissiles(enemies)
 
-        pool.map(calculateSystem.assignCounterMeasureSystemToEnemyMissile(), {})
+        calculateSystem.updateEnemyMissileData(radar.enemyMissileLastPosition)
+
+        calculateSystem.assignCounterMeasureSystemToEnemyMissile()
 
         for counterMeasuresSystem in counterMeasuresSystems:
-            pool.map(counterMeasuresSystem.updateEnemyMissileAssignedData(calculateSystem.enemyMissileData,
-                                                                          calculateSystem.enemyMissilesIdAssignedToCounterMeasuresId), {})
+            counterMeasuresSystem.updateEnemyMissileAssignedData(calculateSystem.enemyMissileData,
+                                                                 calculateSystem.enemyMissilesIdAssignedToCounterMeasuresId)
             actualTime = pygame.time.get_ticks()
-            pool.map(counterMeasuresSystem.launchCounterMeasure(counterMeasuresMissiles, actualTime), {})
+            threadCounterSystem = threading.Thread(
+                target=counterMeasuresSystem.launchCounterMeasure(counterMeasuresMissiles, actualTime), args=())
+            threadCounterSystem.start()
+            threadsCounterSystem.append(threadCounterSystem)
+
+        for thread in threadsCounterSystem:
+            thread.join()
 
         for counterMeasuresMissile in list(counterMeasuresMissiles):
-            pool.map(counterMeasuresMissile.updateObjectivePosition(counterMeasuresSystems[counterMeasuresMissile.counterMeasureSystemId].enemyMissilesAssigned), {})
-            pool.map(counterMeasuresMissile.goToObjective(), {})
+            counterMeasuresMissile.updateObjectivePosition(
+                counterMeasuresSystems[counterMeasuresMissile.counterMeasureSystemId].enemyMissilesAssigned)
+            threadCounterMissile = threading.Thread(target=counterMeasuresMissile.goToObjective(), args=())
+            threadCounterMissile.start()
+            threadsCounterMissile.append(threadCounterMissile)
 
             if counterMeasuresMissile.enemyMissileIntercepted:
                 for enemy in enemies:
@@ -204,11 +220,16 @@ if __name__ == "__main__":
                         enemy.hasBeenIntercepted()
                 counterMeasuresMissiles.pop(counterMeasuresMissiles.index(counterMeasuresMissile))
 
+        for thread in threadsCounterMissile:
+            thread.join()
+
         for city in strategicLocations:
             if city.getCityStatus():
                 CitiesDestroyed += 1
                 strategicLocations.pop(strategicLocations.index(city))
 
+        endTime = pygame.time.get_ticks()
+        print(f'time {round(endTime - startTime,25)}')
         contActiveMissiles = len(enemies)
         contActiveCities = len(strategicLocations)
         angle += DEGRESSPERFRAME
