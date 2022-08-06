@@ -7,7 +7,7 @@ from strategicLocations import strategicLocationsClass
 from EnemyMissile import EnemyMissileClass
 from Position import positionClass
 from Radar import RadarClass
-from Interface import InterfaceClass
+from SimulationInterface import InterfaceClass
 from CalculateSystem import CalculateSystemClass
 from CounterMeasureSystem import CounterMeasureSystemClass
 
@@ -136,7 +136,6 @@ if __name__ == "__main__":
             if event.type == pygame.KEYDOWN:
                 pressed = pygame.key.get_pressed()
                 if pressed[pygame.K_w]:
-                    print(f"A={FPS}")
                     if FPS < 30:
                         FPS += 10
                 if pressed[pygame.K_s]:
@@ -234,7 +233,7 @@ if __name__ == "__main__":
         contActiveCities = len(strategicLocations)
         angle += DEGRESSPERFRAME
 
-        interface.drawWindow(contActiveMissiles, contMissilesDestroyed, contActiveCities, contMissileImpact,
+        interface.drawSimulationWindow(contActiveMissiles, contMissilesDestroyed, contActiveCities, contMissileImpact,
                              CitiesDestroyed, enemies, strategicLocations, counterMeasuresSystems,
                              counterMeasuresMissiles, angle, enemiesDestroyedPositions)
 

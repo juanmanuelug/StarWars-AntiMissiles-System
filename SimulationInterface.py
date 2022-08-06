@@ -1,5 +1,10 @@
 import math
+import time
 
+from Button import Button
+from strategicLocations import strategicLocationsClass
+from CounterMeasureSystem import CounterMeasureSystemClass
+from Position import positionClass
 import pygame
 
 pygame.init()
@@ -25,14 +30,19 @@ class InterfaceClass(object):
         self.redColor = (255, 0, 0)
         self.cityPicture = pygame.image.load('./img/city.png').convert_alpha()
         self.radarPanel = pygame.image.load('./img/panel.png').convert_alpha()
-        self.counterMeasureSystem = pygame.image.load('./img/counterMeasure.png').convert_alpha()
+        self.counterMeasureSystemPicture = pygame.image.load('./img/counterMeasure.png').convert_alpha()
+        self.cityButtonPicture = pygame.image.load('./img/city_button.png').convert_alpha()
+        self.counterMeasureSystemButtonPicture = pygame.image.load('./img/counterMeasureButton.png').convert_alpha()
+        self.cursor_img_rect = 0
+        self.city_clicked = False
+        self.counterMeasureSystem_clicked = False
 
     def loadPictures(self):
         self.cityPicture = pygame.transform.scale(self.cityPicture, (self.cityPictureSize, self.cityPictureSize))
         self.radarPanel = pygame.transform.scale(self.radarPanel, (self.windowsWidth - self.mapWidthLimit,
                                                                    self.windowsHeight))
-        self.counterMeasureSystem = pygame.transform.scale(self.counterMeasureSystem,
-                                                           (self.counterMeasureSystemPictureSize,
+        self.counterMeasureSystemPicture = pygame.transform.scale(self.counterMeasureSystemPicture,
+                                                                  (self.counterMeasureSystemPictureSize,
                                                             self.counterMeasureSystemPictureSize))
 
     def convert_degrees(self, R, theta):
@@ -45,8 +55,8 @@ class InterfaceClass(object):
         screenText = font.render(text, True, self.greenColor)
         self.win.blit(screenText, (positionX, positionY))
 
-    def drawWindow(self, contActiveMissiles, contMissilesDestroyed, contActiveCities, contMissileImpact,
-                   CitiesDestroyed, enemies, strategicLocations, counterMeasureSystems, counterMeasuresMissiles, angle
+    def drawSimulationWindow(self, contActiveMissiles, contMissilesDestroyed, contActiveCities, contMissileImpact,
+                   CitiesDestroyed, enemies, strategicLocations, counterMeasuresSystems, counterMeasuresMissiles, angle
                    , enemiesDestroyedPositions):
         # fondo de la pantalla
         fontText = pygame.font.Font('./fonts/digital-7.ttf', 25)
@@ -58,7 +68,7 @@ class InterfaceClass(object):
         self.drawRadarLine(angle)
         self.drawRadarCircles(fontNumbers)
         self.drawStrategicLocations(strategicLocations)
-        self.drawCounterMeasureSystem(counterMeasureSystems)
+        self.drawCounterMeasureSystem(counterMeasuresSystems)
         self.drawEnemyMissile(enemies)
         self.drawCounterMeasureMissiles(counterMeasuresMissiles)
         self.drawXWhenEnemyMissileIntercepted(enemiesDestroyedPositions)
@@ -109,10 +119,10 @@ class InterfaceClass(object):
     def drawCounterMeasureSystem(self, counterMeasureSystems):
         for counterMeasureSystem in counterMeasureSystems:
             # Las restas a las posiciones es para centrar la foto en el punto
-            self.win.blit(self.counterMeasureSystem, (counterMeasureSystem.position.positionX -
-                                                      int(self.counterMeasureSystemPictureSize / 2),
-                                                      counterMeasureSystem.position.positionY -
-                                                      int(self.counterMeasureSystemPictureSize / 2)))
+            self.win.blit(self.counterMeasureSystemPicture, (counterMeasureSystem.position.positionX -
+                                                             int(self.counterMeasureSystemPictureSize / 2),
+                                                             counterMeasureSystem.position.positionY -
+                                                             int(self.counterMeasureSystemPictureSize / 2)))
 
     def drawCounterMeasureMissiles(self, counterMeasuresMissiles):
         for counterMeasuresMissile in counterMeasuresMissiles:
@@ -127,3 +137,54 @@ class InterfaceClass(object):
                                (5+position.positionX-4,5+position.positionY-4))
             pygame.draw.aaline(self.win,self.redColor,(5+position.positionX-4,position.positionY-4),
                                (position.positionX-4,5+position.positionY-4))
+
+
+    def drawConfigWindow(self, strategicLocations, counterMeasuresSystems, angle):
+        fontNumbers = pygame.font.Font('./fonts/digital-7.ttf', 20)
+        self.loadPictures()
+        self.win.fill((0, 0, 0))  # limpieza de la pantalla
+
+        self.win.blit(self.radarPanel, (self.mapWidthLimit, 0))
+        self.drawRadarLine(angle)
+        self.drawRadarCircles(fontNumbers)
+        self.drawStrategicLocations(strategicLocations)
+        self.drawCounterMeasureSystem(counterMeasuresSystems)
+
+        cityButton = Button(self.textWidthStart * 1.05, self.windowsHeight * 0.2, self.cityButtonPicture,
+                            self.win,0.25)
+        counterMeasureSystemButton = Button(self.textWidthStart * 1.05, self.windowsHeight * 0.5, self.counterMeasureSystemButtonPicture,
+                            self.win, 0.25)
+
+        if cityButton.draw_button():
+            self.city_clicked = not self.city_clicked
+            if self.city_clicked:
+                pygame.mouse.set_visible(False)
+                self.cursor_img_rect = self.cityPicture.get_rect()
+            else:
+                pygame.mouse.set_visible(True)
+
+        if counterMeasureSystemButton.draw_button():
+            self.counterMeasureSystem_clicked = not self.counterMeasureSystem_clicked
+            if self.counterMeasureSystem_clicked:
+                pygame.mouse.set_visible(False)
+                self.cursor_img_rect = self.counterMeasureSystemPicture.get_rect()
+            else:
+                pygame.mouse.set_visible(True)
+
+        if self.city_clicked:
+            self.cursor_img_rect.center = pygame.mouse.get_pos()
+            self.win.blit(self.cityPicture, self.cursor_img_rect)
+            if pygame.mouse.get_pressed()[0] and pygame.mouse.get_pos()[0] < self.mapWidthLimit:
+                cityPos = positionClass(pygame.mouse.get_pos()[0], pygame.mouse.get_pos()[1],0)
+                strategicLocation = strategicLocationsClass(len(strategicLocations), cityPos)
+                strategicLocations.append(strategicLocation)
+                time.sleep(0.1)
+        if self.counterMeasureSystem_clicked:
+            self.cursor_img_rect.center = pygame.mouse.get_pos()
+            self.win.blit(self.counterMeasureSystemPicture, self.cursor_img_rect)
+            if pygame.mouse.get_pressed()[0] and pygame.mouse.get_pos()[0] < self.mapWidthLimit:
+                counterPos = positionClass(pygame.mouse.get_pos()[0], pygame.mouse.get_pos()[1],0)
+                counterMeasuresSystem = CounterMeasureSystemClass(counterPos, len(counterMeasuresSystems))
+                counterMeasuresSystems.append(counterMeasuresSystem)
+                time.sleep(0.1)
+        pygame.display.update()

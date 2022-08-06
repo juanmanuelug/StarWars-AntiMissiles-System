@@ -7,7 +7,7 @@ from strategicLocations import strategicLocationsClass
 from EnemyMissile import EnemyMissileClass
 from Position import positionClass
 from Radar import RadarClass
-from Interface import InterfaceClass
+from SimulationInterface import InterfaceClass
 from CalculateSystem import CalculateSystemClass
 from CounterMeasureSystem import CounterMeasureSystemClass
 
@@ -67,27 +67,12 @@ def spawnEnemyMissiles(enemies, strategicLocations, enemyMissileMaxNumber):
         enemies.append(enemy)
 
 
-def spawnStrategicLocations(strategicLocations):
-    global cityId
-    x = random.randint(CITYSPAWNINFERIORLIMITWIDTH, CITYSPAWNSUPERIORLIMITWIDTH)
-    y = random.randint(CITYSPAWNINFERIORLIMITHEIGHT, CITYSPAWNSUPERIORLIMITHEIGHT)
-    z = random.randint(0, 50)
-    strategicLocationPosition = positionClass(x, y, z)
-    city = strategicLocationsClass(cityId, strategicLocationPosition)
-    cityId += 1
-    strategicLocations.append(city)
-
-
-def spawnCounterMeasuresSystems(counterMeasuresSystems):
-    x = random.randint(CITYSPAWNINFERIORLIMITWIDTH, CITYSPAWNSUPERIORLIMITWIDTH)
-    y = random.randint(CITYSPAWNINFERIORLIMITHEIGHT, CITYSPAWNSUPERIORLIMITHEIGHT)
-    z = random.randint(0, 50)
-    counterMeasuresSystemPosition = positionClass(x, y, z)
-    counterMeasureSystem = CounterMeasureSystemClass(counterMeasuresSystemPosition, len(counterMeasuresSystems))
-    counterMeasuresSystems.append(counterMeasureSystem)
-
-
 if __name__ == "__main__":
+    run = True
+    pause = False
+    menu = True
+    hasSpawnMissiles = False
+
     contActiveMissiles = 0
     contMissileImpact = 0
     contMissilesDestroyed = 0
@@ -95,7 +80,6 @@ if __name__ == "__main__":
     CitiesDestroyed = 0
     angle = 0
     missileId = 0
-    cityId = 0
     FPS = 30
 
 
@@ -114,18 +98,20 @@ if __name__ == "__main__":
     enemies = []
     enemiesDestroyedPositions = []
     strategicLocations = []
+    counterMeasuresSystemsPositions = []
+    strategicLocationsPositions = []
 
+    while menu:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                menu = False
 
-    spawnStrategicLocations(strategicLocations)
-
-    spawnCounterMeasuresSystems(counterMeasuresSystems)
+        angle += DEGRESSPERFRAME
+        interface.drawConfigWindow(strategicLocations, counterMeasuresSystems, angle)
+        clock.tick(FPS)
 
     calculateSystem = CalculateSystemClass(calculateSystemPosition)
     calculateSystem.setCounterMeasuresPosition(counterMeasuresSystems)
-
-    run = True
-    pause = False
-    hasSpawnMissiles = False
 
     pool = multiprocess.Pool(processes=4)
 
@@ -137,7 +123,6 @@ if __name__ == "__main__":
             if event.type == pygame.KEYDOWN:
                 pressed = pygame.key.get_pressed()
                 if pressed[pygame.K_w]:
-                    print(f"A={FPS}")
                     if FPS < 30:
                         FPS += 10
                 if pressed[pygame.K_s]:
@@ -145,6 +130,8 @@ if __name__ == "__main__":
                         FPS -= 10
                 if pressed[pygame.K_SPACE]:
                     pause = not pause
+                if pressed[pygame.K_ESCAPE]:
+                    menu = not menu
 
             while pause:
                 for e in pygame.event.get():
@@ -218,7 +205,7 @@ if __name__ == "__main__":
         contActiveCities = len(strategicLocations)
         angle += DEGRESSPERFRAME
 
-        interface.drawWindow(contActiveMissiles, contMissilesDestroyed, contActiveCities, contMissileImpact,
+        interface.drawSimulationWindow(contActiveMissiles, contMissilesDestroyed, contActiveCities, contMissileImpact,
                              CitiesDestroyed, enemies, strategicLocations, counterMeasuresSystems,
                              counterMeasuresMissiles, angle, enemiesDestroyedPositions)
 

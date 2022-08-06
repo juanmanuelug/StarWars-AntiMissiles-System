@@ -9,7 +9,7 @@ from strategicLocations import strategicLocationsClass
 from EnemyMissile import EnemyMissileClass
 from Position import positionClass
 from Radar import RadarClass
-from Interface import InterfaceClass
+from SimulationInterface import InterfaceClass
 from CalculateSystem import CalculateSystemClass
 from CounterMeasureSystem import CounterMeasureSystemClass
 from ConfigurationWindows import citiesIdPositionGlobal, counterMeasuresIdPositionGlobal, \
