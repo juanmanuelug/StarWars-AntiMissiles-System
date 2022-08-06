@@ -67,6 +67,18 @@ def spawnEnemyMissiles(enemies, strategicLocations, enemyMissileMaxNumber):
         enemies.append(enemy)
 
 
+def configSimulation(menuOption, rotationAngle, simulationFPS, strategicLocations, counterMeasuresSystems):
+    while menuOption:
+        for eventCatcher in pygame.event.get():
+            if eventCatcher.type == pygame.QUIT:
+                menuOption = False
+
+        rotationAngle += DEGRESSPERFRAME
+        menuOption = interface.drawConfigWindow(strategicLocations, counterMeasuresSystems, rotationAngle)
+        clock.tick(simulationFPS)
+    return menuOption
+
+
 if __name__ == "__main__":
     run = True
     pause = False
@@ -81,7 +93,6 @@ if __name__ == "__main__":
     angle = 0
     missileId = 0
     FPS = 30
-
 
     calculateSystemPosition = positionClass(MAPWIDTHLIMIT / 2, WINDOWSHEIGHT / 2, 0)
 
@@ -98,17 +109,8 @@ if __name__ == "__main__":
     enemies = []
     enemiesDestroyedPositions = []
     strategicLocations = []
-    counterMeasuresSystemsPositions = []
-    strategicLocationsPositions = []
 
-    while menu:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                menu = False
-
-        angle += DEGRESSPERFRAME
-        menu = interface.drawConfigWindow(strategicLocations, counterMeasuresSystems, angle)
-        clock.tick(FPS)
+    menu = configSimulation(menu, angle, FPS, strategicLocations, counterMeasuresSystems)
 
     calculateSystem = CalculateSystemClass(calculateSystemPosition)
     calculateSystem.setCounterMeasuresPosition(counterMeasuresSystems)
@@ -178,12 +180,14 @@ if __name__ == "__main__":
 
         for counterMeasuresSystem in counterMeasuresSystems:
             pool.starmap_async(counterMeasuresSystem.updateEnemyMissileAssignedData(calculateSystem.enemyMissileData,
-                                                                          calculateSystem.enemyMissilesIdAssignedToCounterMeasuresId), {})
+                                                                                    calculateSystem.enemyMissilesIdAssignedToCounterMeasuresId),
+                               {})
             actualTime = pygame.time.get_ticks()
             pool.starmap_async(counterMeasuresSystem.launchCounterMeasure(counterMeasuresMissiles, actualTime), {})
 
         for counterMeasuresMissile in list(counterMeasuresMissiles):
-            pool.starmap_async(counterMeasuresMissile.updateObjectivePosition(counterMeasuresSystems[counterMeasuresMissile.counterMeasureSystemId].enemyMissilesAssigned), {})
+            pool.starmap_async(counterMeasuresMissile.updateObjectivePosition(
+                counterMeasuresSystems[counterMeasuresMissile.counterMeasureSystemId].enemyMissilesAssigned), {})
             pool.starmap_async(counterMeasuresMissile.goToObjective(), {})
 
             if counterMeasuresMissile.enemyMissileIntercepted:
@@ -198,14 +202,35 @@ if __name__ == "__main__":
                 strategicLocations.pop(strategicLocations.index(city))
 
         endTime = pygame.time.get_ticks()
-        print(f'time {round(endTime - startTime,25)}')
+        print(f'time {round(endTime - startTime, 25)}')
         contActiveMissiles = len(enemies)
         contActiveCities = len(strategicLocations)
         angle += DEGRESSPERFRAME
 
-        run = interface.drawSimulationWindow(contActiveMissiles, contMissilesDestroyed, contActiveCities, contMissileImpact,
-                             CitiesDestroyed, enemies, strategicLocations, counterMeasuresSystems,
-                             counterMeasuresMissiles, angle, enemiesDestroyedPositions)
+        buttonAction = interface.drawSimulationWindow(contActiveMissiles, contMissilesDestroyed, contActiveCities,
+                                                      contMissileImpact,
+                                                      CitiesDestroyed, enemies, strategicLocations,
+                                                      counterMeasuresSystems,
+                                                      counterMeasuresMissiles, angle, enemiesDestroyedPositions)
+
+        if buttonAction is 'Stop':
+            run = False
+        elif buttonAction is 'Config':
+            menu = True
+
+        if menu:
+            hasSpawnMissiles = False
+            contMissileImpact = 0
+            contMissilesDestroyed = 0
+            CitiesDestroyed = 0
+            angle = 0
+            missileId = 0
+            counterMeasuresMissiles.clear()
+            counterMeasuresSystems.clear()
+            enemies.clear()
+            enemiesDestroyedPositions.clear()
+            strategicLocations.clear()
+            menu = configSimulation(menu, angle, FPS, strategicLocations, counterMeasuresSystems)
+            calculateSystem.setCounterMeasuresPosition(counterMeasuresSystems)
 
         clock.tick(FPS)
-

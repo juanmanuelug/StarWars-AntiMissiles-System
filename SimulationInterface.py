@@ -35,6 +35,7 @@ class InterfaceClass(object):
         self.counterMeasureSystemButtonPicture = pygame.image.load('./img/counterMeasureButton.png').convert_alpha()
         self.startButtonPicture = pygame.image.load('./img/startButton.png').convert_alpha()
         self.stopButtonPicture = pygame.image.load('./img/stopButton.png').convert_alpha()
+        self.configButtonPicture = pygame.image.load('./img/configButton.png').convert_alpha()
         self.backgroundPictureButtonRed = pygame.image.load('./img/button_upper.png').convert_alpha()
         self.backgroundPictureButtonGreen = pygame.image.load('./img/button_upper_start.png').convert_alpha()
         self.cursor_img_rect = 0
@@ -42,8 +43,8 @@ class InterfaceClass(object):
         self.counterMeasureSystem_clicked = False
         self.startButton_clicked = False
         self.stopButton_clicked = False
+        self.configButton_clicked = False
         self.stayInMenu = True
-        self.keepRunning = True
 
     def loadPictures(self):
         self.cityPicture = pygame.transform.scale(self.cityPicture, (self.cityPictureSize, self.cityPictureSize))
@@ -67,6 +68,7 @@ class InterfaceClass(object):
                              CitiesDestroyed, enemies, strategicLocations, counterMeasuresSystems,
                              counterMeasuresMissiles, angle
                              , enemiesDestroyedPositions):
+        buttonOption = ''
         # fondo de la pantalla
         fontText = pygame.font.Font('./fonts/digital-7.ttf', 25)
         fontNumbers = pygame.font.Font('./fonts/digital-7.ttf', 20)
@@ -82,13 +84,21 @@ class InterfaceClass(object):
         self.drawCounterMeasureMissiles(counterMeasuresMissiles)
         self.drawXWhenEnemyMissileIntercepted(enemiesDestroyedPositions)
 
-        stopButton = Button(self.textWidthStart * 1.1, self.windowsHeight * 0.89, self.stopButtonPicture,
+        configButton = Button(self.textWidthStart * 1., self.windowsHeight * 0.89, self.configButtonPicture,
                              self.backgroundPictureButtonGreen, self.win, 0.15)
+
+        stopButton = Button(self.textWidthStart * 1.2, self.windowsHeight * 0.89, self.stopButtonPicture,
+                             self.backgroundPictureButtonGreen, self.win, 0.15)
+
+        if configButton.draw_button():
+            self.configButton_clicked = not self.configButton_clicked
+            if self.configButton_clicked:
+                buttonOption = 'Config'
 
         if stopButton.draw_button():
             self.stopButton_clicked = not self.stopButton_clicked
             if self.stopButton_clicked:
-                self.keepRunning = False
+                buttonOption = 'Stop'
 
         self.text("Active missiles: " + str(contActiveMissiles), self.textWidthStart, self.windowsHeight * 0.2,
                   fontText)
@@ -99,7 +109,7 @@ class InterfaceClass(object):
         self.text("Cities destroyed: " + str(CitiesDestroyed), self.textWidthStart, self.windowsHeight * 0.7, fontText)
 
         pygame.display.update()
-        return  self.keepRunning
+        return buttonOption
 
     def drawEnemyMissile(self, enemies):
         for enemy in enemies:
@@ -159,6 +169,7 @@ class InterfaceClass(object):
                                (position.positionX - 4, 5 + position.positionY - 4))
 
     def drawConfigWindow(self, strategicLocations, counterMeasuresSystems, angle):
+        self.stayInMenu = True
         fontNumbers = pygame.font.Font('./fonts/digital-7.ttf', 20)
         self.loadPictures()
         self.win.fill((0, 0, 0))  # limpieza de la pantalla
