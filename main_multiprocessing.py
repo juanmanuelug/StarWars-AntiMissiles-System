@@ -107,7 +107,7 @@ if __name__ == "__main__":
                 menu = False
 
         angle += DEGRESSPERFRAME
-        interface.drawConfigWindow(strategicLocations, counterMeasuresSystems, angle)
+        menu = interface.drawConfigWindow(strategicLocations, counterMeasuresSystems, angle)
         clock.tick(FPS)
 
     calculateSystem = CalculateSystemClass(calculateSystemPosition)
@@ -130,8 +130,6 @@ if __name__ == "__main__":
                         FPS -= 10
                 if pressed[pygame.K_SPACE]:
                     pause = not pause
-                if pressed[pygame.K_ESCAPE]:
-                    menu = not menu
 
             while pause:
                 for e in pygame.event.get():
@@ -205,7 +203,7 @@ if __name__ == "__main__":
         contActiveCities = len(strategicLocations)
         angle += DEGRESSPERFRAME
 
-        interface.drawSimulationWindow(contActiveMissiles, contMissilesDestroyed, contActiveCities, contMissileImpact,
+        run = interface.drawSimulationWindow(contActiveMissiles, contMissilesDestroyed, contActiveCities, contMissileImpact,
                              CitiesDestroyed, enemies, strategicLocations, counterMeasuresSystems,
                              counterMeasuresMissiles, angle, enemiesDestroyedPositions)
 
