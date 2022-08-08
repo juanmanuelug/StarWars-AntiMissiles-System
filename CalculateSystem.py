@@ -12,6 +12,7 @@ class CalculateSystemClass(object):
         self.enemyMissileData = defaultdict(list)
         self.counterMeasuresPositions = defaultdict(list)
         self.enemyMissilesIdAssignedToCounterMeasuresId = {} #idMissile, idCounterMeasureSystem
+        self.numberOfMissilesAssignedToCounterMeasuresId = defaultdict(int)
 
     def updateEnemyMissileData(self, enemyData):
         self.enemyMissileData = enemyData
@@ -35,15 +36,20 @@ class CalculateSystemClass(object):
                     missilePosition = self.enemyMissileData[enemyMissile][0]
                     nearestCounterMeasureSystemId = self.getNearestCounterMeasureSystem(missilePosition)
                     self.enemyMissilesIdAssignedToCounterMeasuresId.update({enemyMissile: nearestCounterMeasureSystemId})
+                    self.numberOfMissilesAssignedToCounterMeasuresId[nearestCounterMeasureSystemId] = \
+                        self.numberOfMissilesAssignedToCounterMeasuresId[nearestCounterMeasureSystemId] + 1
 
     def getNearestCounterMeasureSystem(self, finalPosition):
         nearestSystemId = 0
+        assignedMissiles = sys.maxsize
         shortestDistance = sys.maxsize
         for counterMeasureSystem in self.counterMeasuresPositions:
             xDist = finalPosition[0] - self.counterMeasuresPositions[counterMeasureSystem][0][0]
             yDist = finalPosition[1] - self.counterMeasuresPositions[counterMeasureSystem][0][1]
             dist = math.sqrt((xDist * xDist) + (yDist * yDist))
             if dist < shortestDistance:
-                shortestDistance = dist
-                nearestSystemId = counterMeasureSystem
+                if self.numberOfMissilesAssignedToCounterMeasuresId[counterMeasureSystem] < assignedMissiles:
+                    shortestDistance = dist
+                    nearestSystemId = counterMeasureSystem
+                    assignedMissiles = self.numberOfMissilesAssignedToCounterMeasuresId[counterMeasureSystem]
         return nearestSystemId

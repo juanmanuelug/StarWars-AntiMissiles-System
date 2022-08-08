@@ -36,6 +36,12 @@ class InterfaceClass(object):
         self.startButtonPicture = pygame.image.load('./img/startButton.png').convert_alpha()
         self.stopButtonPicture = pygame.image.load('./img/stopButton.png').convert_alpha()
         self.configButtonPicture = pygame.image.load('./img/configButton.png').convert_alpha()
+        self.minusOneButtonPicture = pygame.image.load('./img/minusOneButton.png').convert_alpha()
+        self.minusFiveButtonPicture = pygame.image.load('./img/minusFiveButton.png').convert_alpha()
+        self.minusTenButtonPicture = pygame.image.load('./img/minusTenButton.png').convert_alpha()
+        self.plusOneButtonPicture = pygame.image.load('./img/plusOneButton.png').convert_alpha()
+        self.plusFiveButtonPicture = pygame.image.load('./img/plusFiveButton.png').convert_alpha()
+        self.plusTenButtonPicture = pygame.image.load('./img/plusTenButton.png').convert_alpha()
         self.backgroundPictureButtonRed = pygame.image.load('./img/button_upper.png').convert_alpha()
         self.backgroundPictureButtonGreen = pygame.image.load('./img/button_upper_start.png').convert_alpha()
         self.cursor_img_rect = 0
@@ -44,7 +50,12 @@ class InterfaceClass(object):
         self.startButton_clicked = False
         self.stopButton_clicked = False
         self.configButton_clicked = False
-        self.stayInMenu = True
+        self.minusOneButton_clicked = False
+        self.minusFiveButton_clicked = False
+        self.minusTenButton_clicked = False
+        self.plusOneButton_clicked = False
+        self.plusFiveButton_clicked = False
+        self.plusTenButton_clicked = False
 
     def loadPictures(self):
         self.cityPicture = pygame.transform.scale(self.cityPicture, (self.cityPictureSize, self.cityPictureSize))
@@ -168,8 +179,8 @@ class InterfaceClass(object):
             pygame.draw.aaline(self.win, self.redColor, (5 + position.positionX - 4, position.positionY - 4),
                                (position.positionX - 4, 5 + position.positionY - 4))
 
-    def drawConfigWindow(self, strategicLocations, counterMeasuresSystems, angle):
-        self.stayInMenu = True
+    def drawConfigWindow(self, strategicLocations, counterMeasuresSystems, angle, numberOfEnemyMissiles):
+        buttonOption = ''
         fontNumbers = pygame.font.Font('./fonts/digital-7.ttf', 20)
         self.loadPictures()
         self.win.fill((0, 0, 0))  # limpieza de la pantalla
@@ -182,17 +193,83 @@ class InterfaceClass(object):
 
         cityButton = Button(self.textWidthStart * 1.05, self.windowsHeight * 0.2, self.cityButtonPicture,
                             self.backgroundPictureButtonRed, self.win, 0.25)
-        counterMeasureSystemButton = Button(self.textWidthStart * 1.05, self.windowsHeight * 0.5,
+
+        counterMeasureSystemButton = Button(self.textWidthStart * 1.05, self.windowsHeight * 0.4,
                                             self.counterMeasureSystemButtonPicture,
                                             self.backgroundPictureButtonRed, self.win, 0.25)
 
-        startButton = Button(self.textWidthStart * 1.1, self.windowsHeight * 0.89, self.startButtonPicture,
+        minusOneButton = Button(self.textWidthStart * 1, self.windowsHeight * 0.6,
+                                    self.minusOneButtonPicture,
+                                    self.backgroundPictureButtonGreen, self.win, 0.12)
+
+        minusFiveButton = Button(self.textWidthStart * 1.1, self.windowsHeight * 0.6,
+                                    self.minusFiveButtonPicture,
+                                    self.backgroundPictureButtonGreen, self.win, 0.12)
+
+        minusTenButton = Button(self.textWidthStart * 1.2, self.windowsHeight * 0.6,
+                                    self.minusTenButtonPicture,
+                                    self.backgroundPictureButtonGreen, self.win, 0.12)
+
+        self.text("Missiles: " + str(numberOfEnemyMissiles[0]), self.textWidthStart * 1.09, self.windowsHeight * 0.69,
+          fontNumbers)
+
+        plusOneButton = Button(self.textWidthStart * 1, self.windowsHeight * 0.75,
+                                    self.plusOneButtonPicture,
+                                    self.backgroundPictureButtonGreen, self.win, 0.12)
+
+        plusFiveButton = Button(self.textWidthStart * 1.1, self.windowsHeight * 0.75,
+                                    self.plusFiveButtonPicture,
+                                    self.backgroundPictureButtonGreen, self.win, 0.12)
+
+        plusTenButton = Button(self.textWidthStart * 1.2, self.windowsHeight * 0.75,
+                                    self.plusTenButtonPicture,
+                                    self.backgroundPictureButtonGreen, self.win, 0.12)
+
+        startButton = Button(self.textWidthStart * 1, self.windowsHeight * 0.89, self.startButtonPicture,
                              self.backgroundPictureButtonGreen, self.win, 0.15)
+
+        stopButton = Button(self.textWidthStart * 1.2, self.windowsHeight * 0.89, self.stopButtonPicture,
+                     self.backgroundPictureButtonGreen, self.win, 0.15)
+
+        if minusOneButton.draw_button():
+            self.minusOneButton_clicked = not self.minusOneButton_clicked
+            if self.minusOneButton_clicked and numberOfEnemyMissiles[0] >= 1:
+                numberOfEnemyMissiles[0] -= 1
+
+        if minusFiveButton.draw_button():
+            self.minusFiveButton_clicked = not self.minusFiveButton_clicked
+            if self.minusFiveButton_clicked and numberOfEnemyMissiles[0] >= 5:
+                numberOfEnemyMissiles[0] -= 5
+
+        if minusTenButton.draw_button():
+            self.minusTenButton_clicked = not self.minusTenButton_clicked
+            if self.minusTenButton_clicked and numberOfEnemyMissiles[0] >= 10:
+                numberOfEnemyMissiles[0] -= 10
+
+        if plusOneButton.draw_button():
+            self.plusOneButton_clicked = not self.plusOneButton_clicked
+            if self.plusOneButton_clicked:
+                numberOfEnemyMissiles[0] += 1
+
+        if plusFiveButton.draw_button():
+            self.plusFiveButton_clicked = not self.plusFiveButton_clicked
+            if self.plusFiveButton_clicked:
+                numberOfEnemyMissiles[0] += 5
+
+        if plusTenButton.draw_button():
+            self.plusTenButton_clicked = not self.plusTenButton_clicked
+            if self.plusTenButton_clicked:
+                numberOfEnemyMissiles[0] += 10
 
         if startButton.draw_button():
             self.startButton_clicked = not self.startButton_clicked
             if self.startButton_clicked:
-                self.stayInMenu = False
+                buttonOption = 'Start'
+
+        if stopButton.draw_button():
+            self.stopButton_clicked = not self.stopButton_clicked
+            if self.stopButton_clicked:
+                buttonOption = 'Stop'
 
         if cityButton.draw_button():
             self.city_clicked = not self.city_clicked
@@ -229,4 +306,4 @@ class InterfaceClass(object):
 
         pygame.display.update()
 
-        return self.stayInMenu
+        return buttonOption

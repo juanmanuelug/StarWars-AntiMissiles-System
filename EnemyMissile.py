@@ -11,7 +11,7 @@ class EnemyMissileClass(object):
         self.position = positionClass(pos.positionX, pos.positionY, pos.positionZ)
         self.ObjectivePosition = positionClass(ObjPosition.positionX, ObjPosition.positionY, ObjPosition.positionZ)
         self.orientation = self.getObjectiveDirection(pos, ObjPosition)
-        self.velocity = 2
+        self.velocity = 1 #velocidad basada en la velocidad media de misiles de crucero 800km/h
         self.objectiveImpacted = False
         self.intercepted = False
         self.objectiveStillAlive = False

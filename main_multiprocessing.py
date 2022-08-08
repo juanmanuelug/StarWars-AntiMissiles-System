@@ -67,16 +67,21 @@ def spawnEnemyMissiles(enemies, strategicLocations, enemyMissileMaxNumber):
         enemies.append(enemy)
 
 
-def configSimulation(menuOption, rotationAngle, simulationFPS, strategicLocations, counterMeasuresSystems):
+def configSimulation(menuOption, rotationAngle, simulationFPS, strategicLocations, counterMeasuresSystems, interface):
+    global numberOfEnemyMissiles
     while menuOption:
         for eventCatcher in pygame.event.get():
             if eventCatcher.type == pygame.QUIT:
                 menuOption = False
 
         rotationAngle += DEGRESSPERFRAME
-        menuOption = interface.drawConfigWindow(strategicLocations, counterMeasuresSystems, rotationAngle)
+        Option = interface.drawConfigWindow(strategicLocations, counterMeasuresSystems, rotationAngle, numberOfEnemyMissiles)
+        if Option == 'Start':
+            menuOption = False
+        elif Option == 'Stop':
+            menuOption = False
         clock.tick(simulationFPS)
-    return menuOption
+    return Option
 
 
 if __name__ == "__main__":
@@ -85,6 +90,7 @@ if __name__ == "__main__":
     menu = True
     hasSpawnMissiles = False
 
+    numberOfEnemyMissiles = [0]
     contActiveMissiles = 0
     contMissileImpact = 0
     contMissilesDestroyed = 0
@@ -110,7 +116,14 @@ if __name__ == "__main__":
     enemiesDestroyedPositions = []
     strategicLocations = []
 
-    menu = configSimulation(menu, angle, FPS, strategicLocations, counterMeasuresSystems)
+    menuOption = configSimulation(menu, angle, FPS, strategicLocations, counterMeasuresSystems, interface)
+
+    if menuOption == 'Start':
+        menu = False
+    elif menuOption == 'Stop':
+        menu = False
+        run = False
+
 
     calculateSystem = CalculateSystemClass(calculateSystemPosition)
     calculateSystem.setCounterMeasuresPosition(counterMeasuresSystems)
@@ -144,7 +157,7 @@ if __name__ == "__main__":
         startTime = pygame.time.get_ticks()
 
         if not hasSpawnMissiles:
-            spawnEnemyMissiles(enemies, strategicLocations, 100)
+            spawnEnemyMissiles(enemies, strategicLocations, numberOfEnemyMissiles[0])
             hasSpawnMissiles = True
 
         for enemy in enemies:
@@ -184,6 +197,7 @@ if __name__ == "__main__":
                                {})
             actualTime = pygame.time.get_ticks()
             pool.starmap_async(counterMeasuresSystem.launchCounterMeasure(counterMeasuresMissiles, actualTime), {})
+            print(f'misiles asignado a sistema[{counterMeasuresSystem.id}] = {calculateSystem.numberOfMissilesAssignedToCounterMeasuresId[counterMeasuresSystem.id]}')
 
         for counterMeasuresMissile in list(counterMeasuresMissiles):
             pool.starmap_async(counterMeasuresMissile.updateObjectivePosition(
@@ -202,7 +216,7 @@ if __name__ == "__main__":
                 strategicLocations.pop(strategicLocations.index(city))
 
         endTime = pygame.time.get_ticks()
-        print(f'time {round(endTime - startTime, 25)}')
+        #print(f'time {round(endTime - startTime, 25)}')
         contActiveMissiles = len(enemies)
         contActiveCities = len(strategicLocations)
         angle += DEGRESSPERFRAME
@@ -213,9 +227,9 @@ if __name__ == "__main__":
                                                       counterMeasuresSystems,
                                                       counterMeasuresMissiles, angle, enemiesDestroyedPositions)
 
-        if buttonAction is 'Stop':
+        if buttonAction == 'Stop':
             run = False
-        elif buttonAction is 'Config':
+        elif buttonAction == 'Config':
             menu = True
 
         if menu:
@@ -230,7 +244,12 @@ if __name__ == "__main__":
             enemies.clear()
             enemiesDestroyedPositions.clear()
             strategicLocations.clear()
-            menu = configSimulation(menu, angle, FPS, strategicLocations, counterMeasuresSystems)
+            menuOption = configSimulation(menu, angle, FPS, strategicLocations, counterMeasuresSystems, interface)
             calculateSystem.setCounterMeasuresPosition(counterMeasuresSystems)
+            if menuOption == 'Start':
+                menu = False
+            elif menuOption == 'Stop':
+                menu = False
+                run = False
 
         clock.tick(FPS)
