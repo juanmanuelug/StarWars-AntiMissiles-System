@@ -28,7 +28,7 @@ class CounterMeasureSystemClass(object):
 
     def launchCounterMeasure(self, counterMeasuresMissiles, actualTime):
         if len(self.enemyMissilesAssigned) > 0:
-            for enemyMissile in self.enemyMissilesAssigned:
+            for enemyMissile in list(self.enemyMissilesAssigned):
                 if enemyMissile not in self.enemyMissileIdAssignedToCounterMeasureMissileId:
                     if (actualTime - self.lastLaunchTime) / 1000 > 1:
                         counterMeasuresMissile = CounterMeasuresMissileClass(self.position, self.idCounterMeasuresMissiles,
@@ -39,3 +39,4 @@ class CounterMeasureSystemClass(object):
                         self.idCounterMeasuresMissiles += 1
                         self.enemyMissileIdAssignedToCounterMeasureMissileId.update({enemyMissile: self.idCounterMeasuresMissiles})
                         self.lastLaunchTime = actualTime
+                        self.enemyMissilesAssigned.pop(enemyMissile)

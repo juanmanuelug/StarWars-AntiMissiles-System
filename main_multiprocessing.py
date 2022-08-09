@@ -44,27 +44,26 @@ def cityHit(enemy, strategicLocations):
             city.strategicLocationImpacted()
 
 
-def spawnEnemyMissiles(enemies, strategicLocations, enemyMissileMaxNumber):
+def spawnEnemyMissiles(enemies, strategicLocations):
     global missileId
-    for _ in range(enemyMissileMaxNumber):
-        InferiorX = random.randint(MISSILESSPAWNINFERIORLIMIT, CITYSPAWNINFERIORLIMITWIDTH)
-        SuperiorX = random.randint(CITYSPAWNSUPERIORLIMITWIDTH, MISSILESSPAWNSUPERIORLIMITWIDTH)
+    InferiorX = random.randint(MISSILESSPAWNINFERIORLIMIT, CITYSPAWNINFERIORLIMITWIDTH)
+    SuperiorX = random.randint(CITYSPAWNSUPERIORLIMITWIDTH, MISSILESSPAWNSUPERIORLIMITWIDTH)
 
-        InferiorY = random.randint(MISSILESSPAWNINFERIORLIMIT, CITYSPAWNINFERIORLIMITHEIGHT)
-        SuperiorY = random.randint(CITYSPAWNSUPERIORLIMITHEIGHT, MISSILESSPAWNSUPERIORLIMITHEIGHT)
+    InferiorY = random.randint(MISSILESSPAWNINFERIORLIMIT, CITYSPAWNINFERIORLIMITHEIGHT)
+    SuperiorY = random.randint(CITYSPAWNSUPERIORLIMITHEIGHT, MISSILESSPAWNSUPERIORLIMITHEIGHT)
 
-        x = InferiorX if InferiorX % 2 == 0 else SuperiorX
-        y = InferiorY if SuperiorY % 2 == 0 else SuperiorY
-        z = random.randint(100, 200)
-        positionRandom = positionClass(x, y, z)
-        x = random.randint(0, len(strategicLocations) - 1)
-        ObjpositionRandom = positionClass(strategicLocations[x].position.positionX,
-                                          strategicLocations[x].position.positionY,
-                                          strategicLocations[x].position.positionZ)
-        ObjIdRandom = strategicLocations[x].id
-        enemy = EnemyMissileClass(positionRandom, ObjpositionRandom, missileId, ObjIdRandom)
-        missileId += 1
-        enemies.append(enemy)
+    x = InferiorX if InferiorX % 2 == 0 else SuperiorX
+    y = InferiorY if SuperiorY % 2 == 0 else SuperiorY
+    z = random.randint(100, 200)
+    positionRandom = positionClass(x, y, z)
+    x = random.randint(0, len(strategicLocations) - 1)
+    ObjpositionRandom = positionClass(strategicLocations[x].position.positionX,
+                                      strategicLocations[x].position.positionY,
+                                      strategicLocations[x].position.positionZ)
+    ObjIdRandom = strategicLocations[x].id
+    enemy = EnemyMissileClass(positionRandom, ObjpositionRandom, missileId, ObjIdRandom)
+    enemies.append(enemy)
+    missileId += 1
 
 
 def configSimulation(menuOption, rotationAngle, simulationFPS, strategicLocations, counterMeasuresSystems, interface):
@@ -156,9 +155,10 @@ if __name__ == "__main__":
                             pause = not pause
         startTime = pygame.time.get_ticks()
 
-        if not hasSpawnMissiles:
-            spawnEnemyMissiles(enemies, strategicLocations, numberOfEnemyMissiles[0])
-            hasSpawnMissiles = True
+        if not hasSpawnMissiles and numberOfEnemyMissiles[0] >= missileId:
+            spawnEnemyMissiles(enemies, strategicLocations)
+            if missileId == numberOfEnemyMissiles[0]:
+                hasSpawnMissiles = True
 
         for enemy in enemies:
             if enemy.getIntercepted():
@@ -197,7 +197,7 @@ if __name__ == "__main__":
                                {})
             actualTime = pygame.time.get_ticks()
             pool.starmap_async(counterMeasuresSystem.launchCounterMeasure(counterMeasuresMissiles, actualTime), {})
-            print(f'misiles asignado a sistema[{counterMeasuresSystem.id}] = {calculateSystem.numberOfMissilesAssignedToCounterMeasuresId[counterMeasuresSystem.id]}')
+            print(f'misiles asignado a sistema[{counterMeasuresSystem.id}] = {len(counterMeasuresSystem.enemyMissilesAssigned)}')
 
         for counterMeasuresMissile in list(counterMeasuresMissiles):
             pool.starmap_async(counterMeasuresMissile.updateObjectivePosition(
@@ -244,6 +244,8 @@ if __name__ == "__main__":
             enemies.clear()
             enemiesDestroyedPositions.clear()
             strategicLocations.clear()
+            radar.enemyMissileLastPosition.clear()
+            calculateSystem.clear()
             menuOption = configSimulation(menu, angle, FPS, strategicLocations, counterMeasuresSystems, interface)
             calculateSystem.setCounterMeasuresPosition(counterMeasuresSystems)
             if menuOption == 'Start':

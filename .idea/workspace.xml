@@ -43,6 +43,7 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="settings.editor.selected.configurable" value="reference.settings.project.statistic.project.settings" />
   </component>
   <component name="RunManager" selected="Python.main_multiprocessing">
     <configuration name="CalculateSystem" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
@@ -167,25 +168,25 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="WindowStateProjectService">
-    <state width="1345" height="133" key="GridCell.Tab.0.bottom" timestamp="1659962929807">
+    <state width="1345" height="133" key="GridCell.Tab.0.bottom" timestamp="1660072502299">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="1345" height="133" key="GridCell.Tab.0.bottom/0.0.1366.728/1366.0.1920.1040@0.0.1366.728" timestamp="1659962929807" />
+    <state width="1345" height="133" key="GridCell.Tab.0.bottom/0.0.1366.728/1366.0.1920.1040@0.0.1366.728" timestamp="1660072502299" />
     <state width="1899" height="133" key="GridCell.Tab.0.bottom/0.0.1366.728/1366.0.1920.1040@1366.0.1920.1040" timestamp="1659957610592" />
-    <state width="1345" height="133" key="GridCell.Tab.0.center" timestamp="1659962929806">
+    <state width="1345" height="133" key="GridCell.Tab.0.center" timestamp="1660072502299">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="1345" height="133" key="GridCell.Tab.0.center/0.0.1366.728/1366.0.1920.1040@0.0.1366.728" timestamp="1659962929806" />
+    <state width="1345" height="133" key="GridCell.Tab.0.center/0.0.1366.728/1366.0.1920.1040@0.0.1366.728" timestamp="1660072502299" />
     <state width="1899" height="133" key="GridCell.Tab.0.center/0.0.1366.728/1366.0.1920.1040@1366.0.1920.1040" timestamp="1659957610592" />
-    <state width="1345" height="133" key="GridCell.Tab.0.left" timestamp="1659962929806">
+    <state width="1345" height="133" key="GridCell.Tab.0.left" timestamp="1660072502299">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="1345" height="133" key="GridCell.Tab.0.left/0.0.1366.728/1366.0.1920.1040@0.0.1366.728" timestamp="1659962929806" />
+    <state width="1345" height="133" key="GridCell.Tab.0.left/0.0.1366.728/1366.0.1920.1040@0.0.1366.728" timestamp="1660072502299" />
     <state width="1899" height="133" key="GridCell.Tab.0.left/0.0.1366.728/1366.0.1920.1040@1366.0.1920.1040" timestamp="1659957610592" />
-    <state width="1345" height="133" key="GridCell.Tab.0.right" timestamp="1659962929806">
+    <state width="1345" height="133" key="GridCell.Tab.0.right" timestamp="1660072502299">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="1345" height="133" key="GridCell.Tab.0.right/0.0.1366.728/1366.0.1920.1040@0.0.1366.728" timestamp="1659962929806" />
+    <state width="1345" height="133" key="GridCell.Tab.0.right/0.0.1366.728/1366.0.1920.1040@0.0.1366.728" timestamp="1660072502299" />
     <state width="1899" height="133" key="GridCell.Tab.0.right/0.0.1366.728/1366.0.1920.1040@1366.0.1920.1040" timestamp="1659957610592" />
     <state width="1345" height="234" key="GridCell.Tab.1.bottom" timestamp="1659806628319">
       <screen x="0" y="0" width="1366" height="728" />
@@ -203,6 +204,10 @@
       <screen x="0" y="0" width="1366" height="728" />
     </state>
     <state width="1345" height="234" key="GridCell.Tab.1.right/0.0.1366.728/1366.0.1920.1040@0.0.1366.728" timestamp="1659806628319" />
+    <state x="184" y="8" key="SettingsEditor" timestamp="1660068411618">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state x="184" y="8" key="SettingsEditor/0.0.1366.728/1366.0.1920.1040@0.0.1366.728" timestamp="1660068411618" />
     <state x="500" y="277" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1658939973597">
       <screen x="0" y="0" width="1366" height="728" />
     </state>

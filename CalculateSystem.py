@@ -11,7 +11,7 @@ class CalculateSystemClass(object):
         self.activeMissiles = 0
         self.enemyMissileData = defaultdict(list)
         self.counterMeasuresPositions = defaultdict(list)
-        self.enemyMissilesIdAssignedToCounterMeasuresId = {} #idMissile, idCounterMeasureSystem
+        self.enemyMissilesIdAssignedToCounterMeasuresId = {}  # idMissile, idCounterMeasureSystem
         self.numberOfMissilesAssignedToCounterMeasuresId = defaultdict(int)
 
     def updateEnemyMissileData(self, enemyData):
@@ -22,6 +22,12 @@ class CalculateSystemClass(object):
 
     def deleteDeadEnemyMissile(self, enemyId):
         self.enemyMissilesIdAssignedToCounterMeasuresId.pop(enemyId)
+
+    def clear(self):
+        self.enemyMissileData.clear()
+        self.counterMeasuresPositions.clear()
+        self.enemyMissilesIdAssignedToCounterMeasuresId.clear()
+        self.numberOfMissilesAssignedToCounterMeasuresId.clear()
 
     def setCounterMeasuresPosition(self, counterMeasuresSystems):
         for counterMeasureSystem in counterMeasuresSystems:
@@ -35,21 +41,30 @@ class CalculateSystemClass(object):
                 if len(self.enemyMissileData[enemyMissile]) > 1:
                     missilePosition = self.enemyMissileData[enemyMissile][0]
                     nearestCounterMeasureSystemId = self.getNearestCounterMeasureSystem(missilePosition)
-                    self.enemyMissilesIdAssignedToCounterMeasuresId.update({enemyMissile: nearestCounterMeasureSystemId})
+                    self.enemyMissilesIdAssignedToCounterMeasuresId.update(
+                        {enemyMissile: nearestCounterMeasureSystemId})
                     self.numberOfMissilesAssignedToCounterMeasuresId[nearestCounterMeasureSystemId] = \
                         self.numberOfMissilesAssignedToCounterMeasuresId[nearestCounterMeasureSystemId] + 1
 
     def getNearestCounterMeasureSystem(self, finalPosition):
         nearestSystemId = 0
-        assignedMissiles = sys.maxsize
-        shortestDistance = sys.maxsize
-        for counterMeasureSystem in self.counterMeasuresPositions:
-            xDist = finalPosition[0] - self.counterMeasuresPositions[counterMeasureSystem][0][0]
-            yDist = finalPosition[1] - self.counterMeasuresPositions[counterMeasureSystem][0][1]
+        assignedMissiles = self.numberOfMissilesAssignedToCounterMeasuresId[0]
+        xDist = finalPosition[0] - self.counterMeasuresPositions[0][0][0]
+        yDist = finalPosition[1] - self.counterMeasuresPositions[0][0][1]
+        shortestDistance = math.sqrt((xDist * xDist) + (yDist * yDist))
+        i = 1
+        while i < len(self.counterMeasuresPositions):
+            xDist = finalPosition[0] - self.counterMeasuresPositions[i][0][0]
+            yDist = finalPosition[1] - self.counterMeasuresPositions[i][0][1]
             dist = math.sqrt((xDist * xDist) + (yDist * yDist))
-            if dist < shortestDistance:
-                if self.numberOfMissilesAssignedToCounterMeasuresId[counterMeasureSystem] < assignedMissiles:
+            if self.numberOfMissilesAssignedToCounterMeasuresId[i] < assignedMissiles:
+                shortestDistance = dist
+                nearestSystemId = i
+                assignedMissiles = self.numberOfMissilesAssignedToCounterMeasuresId[i]
+            elif self.numberOfMissilesAssignedToCounterMeasuresId[i] == assignedMissiles:
+                if dist < shortestDistance:
                     shortestDistance = dist
-                    nearestSystemId = counterMeasureSystem
-                    assignedMissiles = self.numberOfMissilesAssignedToCounterMeasuresId[counterMeasureSystem]
+                    nearestSystemId = i
+                    assignedMissiles = self.numberOfMissilesAssignedToCounterMeasuresId[i]
+            i += 1
         return nearestSystemId
