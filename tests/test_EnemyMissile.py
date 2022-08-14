@@ -10,20 +10,15 @@ class TestEnemyMissile(unittest.TestCase):
     def setUp(self):
         self.objectives = []
         self.objectivesId = []
-        for i in range(5):
-            position = Position.positionClass(random.randint(0, 2), random.randint(0, 2), random.randint(0, 2))
-            objective = strategicLocations.strategicLocationsClass(i, position)
-            self.objectives.append(objective)
-            self.objectivesId.append(objective.id)
-
-        x = random.randint(0, 4)
+        position = Position.positionClass(0, 0, 0)
+        self.objective = strategicLocations.strategicLocationsClass(0, position)
 
         self.enemyMissile = EnemyMissile.EnemyMissileClass(Position.positionClass(1.1, 1.1, 1.1),
-                                                           self.objectives[x].position, 0,
-                                                           self.objectives[x].id)
+                                                           self.objective.position, 0,
+                                                           self.objective.id)
 
     def testEnemyMissileObjectiveExist(self):
-        self.assertIn(self.enemyMissile.objectiveId, self.objectivesId)
+        self.assertEqual(self.enemyMissile.objectiveId, self.objective.id)
 
     def testEnemyMissileStatusChangeAfterGetImpacted(self):
         self.assertFalse(self.enemyMissile.intercepted)
@@ -38,6 +33,13 @@ class TestEnemyMissile(unittest.TestCase):
         self.enemyMissile.goToObjective()
 
         self.assertTrue(self.enemyMissile.objectiveImpacted)
+
+    def testEnemyMissileHasCorrectOrientation(self):
+        expectedOrientation = {"x": -1, "y": -1}
+        orientation = self.enemyMissile.getObjectiveDirection(self.enemyMissile.position, self.objective.position)
+
+        self.assertEqual(expectedOrientation["x"], orientation["x"])
+        self.assertEqual(expectedOrientation["y"], orientation["y"])
 
 
 if __name__ == '__main__':

@@ -22,6 +22,11 @@ class TestRadar(unittest.TestCase):
 
         self.assertEqual(self.radar.missilesDetected, 1)
 
+    def testRadarDeleteEnemyMissile(self):
+        self.radar.detectMissiles(self.enemyMissiles)
+        self.radar.deleteDeadEnemyMissile(self.enemyMissile.id)
+
+        self.assertEqual(self.radar.missilesDetected, 0)
 
 if __name__ == '__main__':
     unittest.main()

@@ -4,7 +4,7 @@ import unittest
 import EnemyMissile
 import Position
 import strategicLocations
-import main
+import main_multiprocessing
 
 
 class TestStrategicLocations(unittest.TestCase):
@@ -19,14 +19,14 @@ class TestStrategicLocations(unittest.TestCase):
     def testStrategicLocationStatusChangeAfterGetImpactedByEnemyMissile(self):
         self.assertEqual(5, self.strategicLocation.lifes)
 
-        main.cityHit(self.enemyMissile, self.strategicLocations)
+        main_multiprocessing.cityHit(self.enemyMissile, self.strategicLocations)
 
         self.assertLess(self.strategicLocation.lifes, 5)
 
     def testStrategicLocationIsDestroyedWhenItHasNoLifesLeft(self):
         self.strategicLocation.lifes = 1
 
-        main.cityHit(self.enemyMissile, self.strategicLocations)
+        main_multiprocessing.cityHit(self.enemyMissile, self.strategicLocations)
 
         self.assertTrue(self.strategicLocation.getCityStatus())
 
