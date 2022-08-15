@@ -20,7 +20,7 @@ class TestEnemyMissile(unittest.TestCase):
     def testEnemyMissileObjectiveExist(self):
         self.assertEqual(self.enemyMissile.objectiveId, self.objective.id)
 
-    def testEnemyMissileStatusChangeAfterGetImpacted(self):
+    def testEnemyMissileStatusChangeAfterGetIntercepted(self):
         self.assertFalse(self.enemyMissile.intercepted)
 
         self.enemyMissile.hasBeenIntercepted()
