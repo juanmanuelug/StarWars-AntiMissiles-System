@@ -127,7 +127,7 @@ if __name__ == "__main__":
     calculateSystem = CalculateSystemClass(calculateSystemPosition)
     calculateSystem.setCounterMeasuresPosition(counterMeasuresSystems)
 
-    pool = multiprocess.Pool(processes=4)
+    pool = multiprocess.Pool(processes=6)
 
     while run:
         multiprocess.freeze_support()
@@ -186,11 +186,11 @@ if __name__ == "__main__":
                     enemies.pop(enemies.index(enemy))
 
         if len(strategicLocations) > 0:
-            pool.starmap_async(radar.detectMissiles(enemies), {})
+            radar.detectMissiles(enemies)
 
-            pool.starmap_async(calculateSystem.updateEnemyMissileData(radar.enemyMissileLastPosition), {})
+            calculateSystem.updateEnemyMissileData(radar.enemyMissileLastPosition)
 
-            pool.starmap_async(calculateSystem.assignCounterMeasureSystemToEnemyMissile(), {})
+            calculateSystem.assignCounterMeasureSystemToEnemyMissile()
 
             for counterMeasuresSystem in counterMeasuresSystems:
                 pool.starmap_async(counterMeasuresSystem.updateEnemyMissileAssignedData(calculateSystem.enemyMissileData,
@@ -217,7 +217,7 @@ if __name__ == "__main__":
                 strategicLocations.pop(strategicLocations.index(city))
 
         endTime = pygame.time.get_ticks()
-        # print(f'time {round(endTime - startTime, 25)}')
+        print(f'time {round(endTime - startTime, 25)} milliseconds')
         contActiveMissiles = len(enemies)
         contActiveCities = len(strategicLocations)
         angle += DEGRESSPERFRAME

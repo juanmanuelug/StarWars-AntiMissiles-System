@@ -1,23 +1,0 @@
-
-Mpython:S1066Œ"/Merge this if statement with the enclosing one.(ñ±ñƒşÿÿÿÿ
-Gpython:S1066"/Merge this if statement with the enclosing one.(œ¬š8
-zpython:S117)"^Rename this parameter "strategicLocations" to match the regular expression ^[_a-z][a-z0-9_]*$.(ÔûğÓùÿÿÿÿ
-jpython:S1542)"MRename function "cityHit" to match the regular expression ^[a-z_][a-z0-9_]*$.(ÔûğÓùÿÿÿÿ
-qpython:S1171"ZRename this local variable "InferiorX" to match the regular expression ^[_a-z][a-z0-9_]*$.(÷á”È
-vpython:S1174"ZRename this local variable "InferiorY" to match the regular expression ^[_a-z][a-z0-9_]*$.(­»‰Ğùÿÿÿÿ
-xpython:S117?"\Rename this local variable "ObjIdRandom" to match the regular expression ^[_a-z][a-z0-9_]*$.(Ö°ôˆùÿÿÿÿ
-ypython:S117<"bRename this local variable "ObjpositionRandom" to match the regular expression ^[_a-z][a-z0-9_]*$.(Ä‡ù 
-qpython:S1172"ZRename this local variable "SuperiorX" to match the regular expression ^[_a-z][a-z0-9_]*$.(Ä±‡ƒ
-ppython:S1175"ZRename this local variable "SuperiorY" to match the regular expression ^[_a-z][a-z0-9_]*$.(‹øğt
-vpython:S117:"_Rename this local variable "positionRandom" to match the regular expression ^[_a-z][a-z0-9_]*$.(¼æ¢±
-upython:S117/"^Rename this parameter "strategicLocations" to match the regular expression ^[_a-z][a-z0-9_]*$.(ÌãÒ
-ppython:S1542/"XRename function "spawnEnemyMissiles" to match the regular expression ^[a-z_][a-z0-9_]*$.(ÌãÒ
-npython:S117M"WRename this local variable "Option" to match the regular expression ^[_a-z][a-z0-9_]*$.(ªÙû¹
-ypython:S117E"bRename this parameter "counterMeasuresSystems" to match the regular expression ^[_a-z][a-z0-9_]*$.(ù®£Ü
-tpython:S117H"]Rename this local variable "eventCatcher" to match the regular expression ^[_a-z][a-z0-9_]*$.(ŞÿÑİ
-mpython:S117E"VRename this parameter "menuOption" to match the regular expression ^[_a-z][a-z0-9_]*$.(ù®£Ü
-ppython:S117E"YRename this parameter "rotationAngle" to match the regular expression ^[_a-z][a-z0-9_]*$.(ù®£Ü
-ppython:S117E"YRename this parameter "simulationFPS" to match the regular expression ^[_a-z][a-z0-9_]*$.(ù®£Ü
-upython:S117E"^Rename this parameter "strategicLocations" to match the regular expression ^[_a-z][a-z0-9_]*$.(ù®£Ü
-npython:S1542E"VRename function "configSimulation" to match the regular expression ^[a-z_][a-z0-9_]*$.(ù®£Ü
-python:S1871R"bEither merge this branch with the identical one on line "80" or change one of the implementations.(µêŒÿÿÿÿÿ

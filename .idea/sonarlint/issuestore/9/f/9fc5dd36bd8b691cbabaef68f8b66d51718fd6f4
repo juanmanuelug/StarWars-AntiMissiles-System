@@ -1,26 +1,0 @@
-
-python:S116"hRename this field "difPositionWithObjectivePosition" to match the regular expression ^[_a-z][_a-z0-9]*$.(ÊŠ®Á
-upython:S116"YRename this field "ObjectivePosition" to match the regular expression ^[_a-z][_a-z0-9]*$.(ÔÃî şÿÿÿÿ
-vpython:S116"_Rename this field "moduleObjectivePosition" to match the regular expression ^[_a-z][_a-z0-9]*$.(ŠÌù°
-opython:S116"YRename this field "objectiveImpacted" to match the regular expression ^[_a-z][_a-z0-9]*$.(¦ß†
-rpython:S116"[Rename this field "objectiveStillAlive" to match the regular expression ^[_a-z][_a-z0-9]*$.(¬çÔÜ
-jpython:S116
-"SRename this field "objectiveId" to match the regular expression ^[_a-z][_a-z0-9]*$.(€À´í
-python:S116"hRename this field "normalizePositionObjectiveVector" to match the regular expression ^[_a-z][_a-z0-9]*$.(ù‰Š˜
-spython:S117"WRename this parameter "ObjPosition" to match the regular expression ^[_a-z][a-z0-9_]*$.(İ°şûÿÿÿÿ
-mpython:S117"QRename this parameter "objId" to match the regular expression ^[_a-z][a-z0-9_]*$.(İ°şûÿÿÿÿ
-ipython:S100"RRename method "isInObjectiveX" to match the regular expression ^[a-z_][a-z0-9_]*$.(ºÉûø
-npython:S100"RRename method "isInObjectiveY" to match the regular expression ^[a-z_][a-z0-9_]*$.(âª–Ñúÿÿÿÿ
-vpython:S100%"ZRename method "isInObjectivePerimeter" to match the regular expression ^[a-z_][a-z0-9_]*$.(¾µ¬¡ÿÿÿÿÿ
-upython:S100,"YRename method "isInObjectiveAltitude" to match the regular expression ^[a-z_][a-z0-9_]*$.(Ö‰·ûÿÿÿÿ
-tpython:S1002"XRename method "hasReachTheObjective" to match the regular expression ^[a-z_][a-z0-9_]*$.(§Øî¨ùÿÿÿÿ
-rpython:S1006"VRename method "hasBeenIntercepted" to match the regular expression ^[a-z_][a-z0-9_]*$.(‘‰ñĞüÿÿÿÿ
-tpython:S1009"XRename method "getObjectiveImpacted" to match the regular expression ^[a-z_][a-z0-9_]*$.(šîé³ÿÿÿÿÿ
-npython:S100<"RRename method "getIntercepted" to match the regular expression ^[a-z_][a-z0-9_]*$.(‡Ç“‘ùÿÿÿÿ
-mpython:S117?"WRename this parameter "ObjPosition" to match the regular expression ^[_a-z][a-z0-9_]*$.(Î§îh
-lpython:S117?"VRename this parameter "myPosition" to match the regular expression ^[_a-z][a-z0-9_]*$.(Î§îh
-opython:S100?"YRename method "getObjectiveDirection" to match the regular expression ^[a-z_][a-z0-9_]*$.(Î§îh
-hpython:S100N"QRename method "goToObjective" to match the regular expression ^[a-z_][a-z0-9_]*$.(™­ø×
-‚python:S100`"lRename method "calculateDifferenceWithObjectivePosition" to match the regular expression ^[a-z_][a-z0-9_]*$.(¦§ît
-}python:S100f"fRename method "calculateModuleOfObjectivePosition" to match the regular expression ^[a-z_][a-z0-9_]*$.(©‰ïµ
-‰python:S100l"mRename method "calculateNormalizeObjectivePositionVector" to match the regular expression ^[a-z_][a-z0-9_]*$.(ßÙôùÿÿÿÿ
