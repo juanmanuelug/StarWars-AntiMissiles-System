@@ -35,8 +35,8 @@ class EnemyMissileClass(object):
             return False
 
     def isInObjectivePerimeter(self):
-        if (abs(self.ObjectivePosition.positionX - self.position.positionX) <= 1 and
-                abs(self.ObjectivePosition.positionY - self.position.positionY) <= 1):
+        if (abs(self.ObjectivePosition.positionX - self.position.positionX) <= 5 and
+                abs(self.ObjectivePosition.positionY - self.position.positionY) <= 5):
             return True
         else:
             return False

@@ -74,7 +74,8 @@ def configSimulation(menuOption, rotationAngle, simulationFPS, strategicLocation
                 menuOption = False
 
         rotationAngle += DEGRESSPERFRAME
-        Option = interface.drawConfigWindow(strategicLocations, counterMeasuresSystems, rotationAngle, numberOfEnemyMissiles)
+        Option = interface.drawConfigWindow(strategicLocations, counterMeasuresSystems, rotationAngle,
+                                            numberOfEnemyMissiles)
         if Option == 'Start':
             menuOption = False
         elif Option == 'Stop':
@@ -122,7 +123,6 @@ if __name__ == "__main__":
     elif menuOption == 'Stop':
         menu = False
         run = False
-
 
     calculateSystem = CalculateSystemClass(calculateSystemPosition)
     calculateSystem.setCounterMeasuresPosition(counterMeasuresSystems)
@@ -185,19 +185,20 @@ if __name__ == "__main__":
                     radar.deleteDeadEnemyMissile(enemy.id)
                     enemies.pop(enemies.index(enemy))
 
-        pool.starmap_async(radar.detectMissiles(enemies), {})
+        if len(strategicLocations) > 0:
+            pool.starmap_async(radar.detectMissiles(enemies), {})
 
-        pool.starmap_async(calculateSystem.updateEnemyMissileData(radar.enemyMissileLastPosition), {})
+            pool.starmap_async(calculateSystem.updateEnemyMissileData(radar.enemyMissileLastPosition), {})
 
-        pool.starmap_async(calculateSystem.assignCounterMeasureSystemToEnemyMissile(), {})
+            pool.starmap_async(calculateSystem.assignCounterMeasureSystemToEnemyMissile(), {})
 
-        for counterMeasuresSystem in counterMeasuresSystems:
-            pool.starmap_async(counterMeasuresSystem.updateEnemyMissileAssignedData(calculateSystem.enemyMissileData,
-                                                                                    calculateSystem.enemyMissilesIdAssignedToCounterMeasuresId),
-                               {})
-            actualTime = pygame.time.get_ticks()
-            pool.starmap_async(counterMeasuresSystem.launchCounterMeasure(counterMeasuresMissiles, actualTime), {})
-            print(f'misiles asignado a sistema[{counterMeasuresSystem.id}] = {len(counterMeasuresSystem.enemyMissilesAssigned)}')
+            for counterMeasuresSystem in counterMeasuresSystems:
+                pool.starmap_async(counterMeasuresSystem.updateEnemyMissileAssignedData(calculateSystem.enemyMissileData,
+                                                                                        calculateSystem.enemyMissilesIdAssignedToCounterMeasuresId),
+                                   {})
+                actualTime = pygame.time.get_ticks()
+                pool.starmap_async(counterMeasuresSystem.launchCounterMeasure(counterMeasuresMissiles, actualTime), {})
+                #print(f'misiles asignado a sistema[{counterMeasuresSystem.id}] = {len(counterMeasuresSystem.enemyMissilesAssigned)}')
 
         for counterMeasuresMissile in list(counterMeasuresMissiles):
             pool.starmap_async(counterMeasuresMissile.updateObjectivePosition(
@@ -216,7 +217,7 @@ if __name__ == "__main__":
                 strategicLocations.pop(strategicLocations.index(city))
 
         endTime = pygame.time.get_ticks()
-        #print(f'time {round(endTime - startTime, 25)}')
+        # print(f'time {round(endTime - startTime, 25)}')
         contActiveMissiles = len(enemies)
         contActiveCities = len(strategicLocations)
         angle += DEGRESSPERFRAME

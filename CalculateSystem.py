@@ -57,7 +57,7 @@ class CalculateSystemClass(object):
             xDist = finalPosition[0] - self.counterMeasuresPositions[i][0][0]
             yDist = finalPosition[1] - self.counterMeasuresPositions[i][0][1]
             dist = math.sqrt((xDist * xDist) + (yDist * yDist))
-            if self.numberOfMissilesAssignedToCounterMeasuresId[i] < assignedMissiles:
+            if self.numberOfMissilesAssignedToCounterMeasuresId[i] < assignedMissiles - 2:
                 shortestDistance = dist
                 nearestSystemId = i
                 assignedMissiles = self.numberOfMissilesAssignedToCounterMeasuresId[i]
@@ -66,5 +66,11 @@ class CalculateSystemClass(object):
                     shortestDistance = dist
                     nearestSystemId = i
                     assignedMissiles = self.numberOfMissilesAssignedToCounterMeasuresId[i]
+            elif assignedMissiles > self.numberOfMissilesAssignedToCounterMeasuresId[i] >= assignedMissiles - 2:
+                if dist < shortestDistance:
+                    shortestDistance = dist
+                    nearestSystemId = i
+                    assignedMissiles = self.numberOfMissilesAssignedToCounterMeasuresId[i]
+
             i += 1
         return nearestSystemId
