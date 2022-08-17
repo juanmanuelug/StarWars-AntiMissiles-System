@@ -1,0 +1,27 @@
+
+python:S116"rRename this field "enemyMissilesIdAssignedToCounterMeasuresId" to match the regular expression ^[_a-z][_a-z0-9]*$.(à‘Õèùÿÿÿÿ
+|python:S116"`Rename this field "counterMeasuresPositions" to match the regular expression ^[_a-z][_a-z0-9]*$.(‚®Üºúÿÿÿÿ
+python:S116"sRename this field "numberOfMissilesAssignedToCounterMeasuresId" to match the regular expression ^[_a-z][_a-z0-9]*$.(±×šøÿÿÿÿ
+tpython:S116"XRename this field "enemyMissileData" to match the regular expression ^[_a-z][_a-z0-9]*$.(àé¤ãùÿÿÿÿ
+rpython:S116"VRename this field "activeMissiles" to match the regular expression ^[_a-z][_a-z0-9]*$.(±´²•şÿÿÿÿ
+lpython:S117"URename this parameter "enemyData" to match the regular expression ^[_a-z][a-z0-9_]*$.(ÁØ™ï
+spython:S117"]Rename this local variable "enemyMissile" to match the regular expression ^[_a-z][a-z0-9_]*$.(ˆâ¹\
+qpython:S100"ZRename method "updateEnemyMissileData" to match the regular expression ^[a-z_][a-z0-9_]*$.(ÁØ™ï
+jpython:S117"SRename this parameter "enemyId" to match the regular expression ^[_a-z][a-z0-9_]*$.(ÑóæŒ
+qpython:S100"ZRename method "deleteDeadEnemyMissile" to match the regular expression ^[a-z_][a-z0-9_]*$.(ÑóæŒ
+ƒpython:S117""gRename this local variable "counterMeasurePosition" to match the regular expression ^[_a-z][a-z0-9_]*$.(ÜÅôıúÿÿÿÿ
+python:S117!"eRename this local variable "counterMeasureSystem" to match the regular expression ^[_a-z][a-z0-9_]*$.(Ë‹·Ïıÿÿÿÿ
+~python:S117 "bRename this parameter "counterMeasuresSystems" to match the regular expression ^[_a-z][a-z0-9_]*$.(—¼‰àúÿÿÿÿ
+zpython:S100 "^Rename method "setCounterMeasuresPosition" to match the regular expression ^[a-z_][a-z0-9_]*$.(—¼‰àúÿÿÿÿ
+ypython:S117'"]Rename this local variable "enemyMissile" to match the regular expression ^[_a-z][a-z0-9_]*$.(ö‚Òøùÿÿÿÿ
+|python:S117*"`Rename this local variable "missilePosition" to match the regular expression ^[_a-z][a-z0-9_]*$.(¼¹Êåùÿÿÿÿ
+Špython:S117+"nRename this local variable "nearestCounterMeasureSystemId" to match the regular expression ^[_a-z][a-z0-9_]*$.(ÕØ«øøÿÿÿÿ
+ƒpython:S100&"lRename method "assignCounterMeasureSystemToEnemyMissile" to match the regular expression ^[a-z_][a-z0-9_]*$.(èÔ¼Ø
+wpython:S1173"aRename this local variable "assignedMissiles" to match the regular expression ^[_a-z][a-z0-9_]*$.(–´ø
+ppython:S1171"YRename this parameter "finalPosition" to match the regular expression ^[_a-z][a-z0-9_]*$.(ÉÙ®é
+|python:S1172"`Rename this local variable "nearestSystemId" to match the regular expression ^[_a-z][a-z0-9_]*$.(¨¨ßæúÿÿÿÿ
+}python:S1176"aRename this local variable "shortestDistance" to match the regular expression ^[_a-z][a-z0-9_]*$.(åÄ‚£úÿÿÿÿ
+rpython:S1174"VRename this local variable "xDist" to match the regular expression ^[_a-z][a-z0-9_]*$.(íİ’İùÿÿÿÿ
+mpython:S1175"VRename this local variable "yDist" to match the regular expression ^[_a-z][a-z0-9_]*$.(Ìâ×
+ypython:S1001"bRename method "getNearestCounterMeasureSystem" to match the regular expression ^[a-z_][a-z0-9_]*$.(ÉÙ®é
+python:S1871F"bEither merge this branch with the identical one on line "65" or change one of the implementations.(ŒúŠİùÿÿÿÿ

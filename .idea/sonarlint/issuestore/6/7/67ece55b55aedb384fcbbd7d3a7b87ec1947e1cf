@@ -1,0 +1,18 @@
+
+python:S116"wRename this field "enemyMissileIdAssignedToCounterMeasureMissileId" to match the regular expression ^[_a-z][_a-z0-9]*$.( íõ
+rpython:S116"VRename this field "lastLaunchTime" to match the regular expression ^[_a-z][_a-z0-9]*$.(”ı…ªøÿÿÿÿ
+xpython:S116"aRename this field "idCounterMeasuresMissiles" to match the regular expression ^[_a-z][_a-z0-9]*$.(Ş®Ğş
+ypython:S116"]Rename this field "enemyMissilesAssigned" to match the regular expression ^[_a-z][_a-z0-9]*$.(Úü‘ÿÿÿÿÿ
+tpython:S117"XRename this local variable "enemyId" to match the regular expression ^[_a-z][a-z0-9_]*$.(…áêÑşÿÿÿÿ
+{python:S117"dRename this parameter "enemyMissileAssignedList" to match the regular expression ^[_a-z][a-z0-9_]*$.(™ÜéÔ
+spython:S117"\Rename this parameter "enemyMissileData" to match the regular expression ^[_a-z][a-z0-9_]*$.(™ÜéÔ
+tpython:S117"^Rename this local variable "enemyMissiles" to match the regular expression ^[_a-z][a-z0-9_]*$.(ÜöÌ'
+ypython:S100"bRename method "updateEnemyMissileAssignedData" to match the regular expression ^[a-z_][a-z0-9_]*$.(™ÜéÔ
+tpython:S117"]Rename this local variable "enemyMissile" to match the regular expression ^[_a-z][a-z0-9_]*$.(Àê¨«
+spython:S117"\Rename this parameter "enemyMissileData" to match the regular expression ^[_a-z][a-z0-9_]*$.(±Ë™¤
+rpython:S100"[Rename method "deleteDeadEnemyMissiles" to match the regular expression ^[a-z_][a-z0-9_]*$.(±Ë™¤
+mpython:S117"VRename this parameter "actualTime" to match the regular expression ^[_a-z][a-z0-9_]*$.(¿½Ëœ
+ƒpython:S117$"gRename this local variable "counterMeasuresMissile" to match the regular expression ^[_a-z][a-z0-9_]*$.(Ùîåíüÿÿÿÿ
+zpython:S117"cRename this parameter "counterMeasuresMissiles" to match the regular expression ^[_a-z][a-z0-9_]*$.(¿½Ëœ
+tpython:S117!"]Rename this local variable "enemyMissile" to match the regular expression ^[_a-z][a-z0-9_]*$.(øŞˆÕ
+opython:S100"XRename method "launchCounterMeasure" to match the regular expression ^[a-z_][a-z0-9_]*$.(¿½Ëœ
