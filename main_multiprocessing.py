@@ -153,7 +153,6 @@ if __name__ == "__main__":
                         pressed = pygame.key.get_pressed()
                         if pressed[pygame.K_SPACE]:
                             pause = not pause
-        startTime = pygame.time.get_ticks()
 
         if not hasSpawnMissiles and numberOfEnemyMissiles[0] >= missileId:
             spawnEnemyMissiles(enemies, strategicLocations)
@@ -185,6 +184,7 @@ if __name__ == "__main__":
                     radar.deleteDeadEnemyMissile(enemy.id)
                     enemies.pop(enemies.index(enemy))
 
+        startTime = pygame.time.get_ticks()
         if len(strategicLocations) > 0:
             radar.detectMissiles(enemies)
 
@@ -198,6 +198,8 @@ if __name__ == "__main__":
                                    {})
                 actualTime = pygame.time.get_ticks()
                 pool.starmap_async(counterMeasuresSystem.launchCounterMeasure(counterMeasuresMissiles, actualTime), {})
+                endTime = pygame.time.get_ticks()
+                #print(f'time {round(endTime - startTime, 25)} milliseconds')
                 #print(f'misiles asignado a sistema[{counterMeasuresSystem.id}] = {len(counterMeasuresSystem.enemyMissilesAssigned)}')
 
         for counterMeasuresMissile in list(counterMeasuresMissiles):
@@ -216,8 +218,6 @@ if __name__ == "__main__":
                 CitiesDestroyed += 1
                 strategicLocations.pop(strategicLocations.index(city))
 
-        endTime = pygame.time.get_ticks()
-        print(f'time {round(endTime - startTime, 25)} milliseconds')
         contActiveMissiles = len(enemies)
         contActiveCities = len(strategicLocations)
         angle += DEGRESSPERFRAME

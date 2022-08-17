@@ -24,9 +24,8 @@ class CounterMeasureSystemClass(object):
 
     def deleteDeadEnemyMissiles(self, enemyMissileData):
         for enemyMissile in list(self.enemyMissileIdAssignedToCounterMeasureMissileId):
-            if enemyMissile not in enemyMissileData:
+            if enemyMissile not in list(enemyMissileData):
                 self.enemyMissileIdAssignedToCounterMeasureMissileId.pop(enemyMissile)
-                self.enemyMissilesAssigned.pop(enemyMissile)
 
     def launchCounterMeasure(self, counterMeasuresMissiles, actualTime):
         if len(self.enemyMissilesAssigned) > 0 and len(self.enemyMissilesAssigned) != len(self.enemyMissileIdAssignedToCounterMeasureMissileId):
