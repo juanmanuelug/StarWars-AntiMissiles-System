@@ -54,7 +54,7 @@ def spawnEnemyMissiles(enemies, strategicLocations):
 
     x = InferiorX if InferiorX % 2 == 0 else SuperiorX
     y = InferiorY if SuperiorY % 2 == 0 else SuperiorY
-    z = random.randint(100, 200)
+    z = random.randint(50, 100)
     positionRandom = positionClass(x, y, z)
     x = random.randint(0, len(strategicLocations) - 1)
     ObjpositionRandom = positionClass(strategicLocations[x].position.positionX,
@@ -98,6 +98,7 @@ if __name__ == "__main__":
     CitiesDestroyed = 0
     angle = 0
     missileId = 0
+    lastTimeSpawn = 0
     FPS = 30
 
     calculateSystemPosition = positionClass(MAPWIDTHLIMIT / 2, WINDOWSHEIGHT / 2, 0)
@@ -154,7 +155,9 @@ if __name__ == "__main__":
                         if pressed[pygame.K_SPACE]:
                             pause = not pause
 
-        if not hasSpawnMissiles and numberOfEnemyMissiles[0] >= missileId:
+        actualTime = pygame.time.get_ticks()
+        if not hasSpawnMissiles and numberOfEnemyMissiles[0] >= missileId and (actualTime - lastTimeSpawn) / 1000 > 1:
+            lastTimeSpawn = pygame.time.get_ticks()
             spawnEnemyMissiles(enemies, strategicLocations)
             if missileId == numberOfEnemyMissiles[0]:
                 hasSpawnMissiles = True

@@ -11,7 +11,7 @@ class EnemyMissileClass(object):
         self.position = positionClass(pos.positionX, pos.positionY, pos.positionZ)
         self.ObjectivePosition = positionClass(ObjPosition.positionX, ObjPosition.positionY, ObjPosition.positionZ)
         self.orientation = self.getObjectiveDirection(pos, ObjPosition)
-        self.velocity = 1 #velocidad basada en la velocidad media de misiles de crucero 800km/h
+        self.velocity = 0.5 #velocidad basada en la velocidad media de misiles de crucero 800km/h
         self.objectiveImpacted = False
         self.intercepted = False
         self.objectiveStillAlive = False
@@ -90,7 +90,7 @@ class EnemyMissileClass(object):
                 if not self.isInObjectiveY():
                     self.position.positionY += self.velocity * self.orientation[
                         "y"] * self.normalizePositionObjectiveVector.positionY
-                self.position.positionZ -= self.velocity * self.normalizePositionObjectiveVector.positionZ
+                self.position.positionZ -= (self.velocity * 2) * self.normalizePositionObjectiveVector.positionZ
             self.hasReachTheObjective()
 
     def calculateDifferenceWithObjectivePosition(self):

@@ -13,6 +13,7 @@ class CounterMeasureSystemClass(object):
         self.enemyMissileIdAssignedToCounterMeasureMissileId = {} #idMissile, idCounterMeasure
         self.idCounterMeasuresMissiles = 0
         self.lastLaunchTime = 0
+        self.numberOfLaunches = 0
 
     def updateEnemyMissileAssignedData(self, enemyMissileData, enemyMissileAssignedList):
         self.deleteDeadEnemyMissiles(enemyMissileData)
@@ -32,16 +33,30 @@ class CounterMeasureSystemClass(object):
             self.sortEnemyMissilesByDistance()
             for enemyMissile in list(self.enemyMissilesAssigned):
                 if enemyMissile not in self.enemyMissileIdAssignedToCounterMeasureMissileId:
-                    if (actualTime - self.lastLaunchTime) / 1000 > 1:
-                        counterMeasuresMissile = CounterMeasuresMissileClass(self.position, self.idCounterMeasuresMissiles,
-                                                                             self.id,
-                                                                             self.enemyMissilesAssigned[enemyMissile],
-                                                                             enemyMissile)
-                        counterMeasuresMissiles.append(counterMeasuresMissile)
-                        self.idCounterMeasuresMissiles += 1
-                        self.enemyMissileIdAssignedToCounterMeasureMissileId.update({enemyMissile: self.idCounterMeasuresMissiles})
-                        self.lastLaunchTime = actualTime
-                        self.enemyMissilesAssigned.pop(enemyMissile)
+                    if self.numberOfLaunches % 16 == 0:
+                        if (actualTime - self.lastLaunchTime) / 1000 > 10:
+                            counterMeasuresMissile = CounterMeasuresMissileClass(self.position, self.idCounterMeasuresMissiles,
+                                                                                 self.id,
+                                                                                 self.enemyMissilesAssigned[enemyMissile],
+                                                                                 enemyMissile)
+                            counterMeasuresMissiles.append(counterMeasuresMissile)
+                            self.idCounterMeasuresMissiles += 1
+                            self.enemyMissileIdAssignedToCounterMeasureMissileId.update({enemyMissile: self.idCounterMeasuresMissiles})
+                            self.lastLaunchTime = actualTime
+                            self.enemyMissilesAssigned.pop(enemyMissile)
+                            self.numberOfLaunches += 1
+                    else:
+                        if (actualTime - self.lastLaunchTime) / 1000 > 2:
+                            counterMeasuresMissile = CounterMeasuresMissileClass(self.position, self.idCounterMeasuresMissiles,
+                                                                                 self.id,
+                                                                                 self.enemyMissilesAssigned[enemyMissile],
+                                                                                 enemyMissile)
+                            counterMeasuresMissiles.append(counterMeasuresMissile)
+                            self.idCounterMeasuresMissiles += 1
+                            self.enemyMissileIdAssignedToCounterMeasureMissileId.update({enemyMissile: self.idCounterMeasuresMissiles})
+                            self.lastLaunchTime = actualTime
+                            self.enemyMissilesAssigned.pop(enemyMissile)
+                            self.numberOfLaunches += 1
 
     def sortEnemyMissilesByDistance(self):
         enemyIdArray = []

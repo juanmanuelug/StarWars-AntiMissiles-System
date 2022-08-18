@@ -10,7 +10,7 @@ class CounterMeasuresMissileClass(object):
         self.id = id
         self.counterMeasureSystemId = counterMeasureSystemId
         self.enemyId = enemyId
-        self.velocity = 6 #velocidad 6 veces mayor al misil enemigo(basado en el sistema SPYDER mach 4)
+        self.velocity = 3.5 #velocidad 7 veces mayor al misil enemigo(basado en el sistema Patriot mach 5)
         self.orientation = self.getObjectiveDirection(self.position, self.objectivePosition)
         self.enemyMissileIntercepted = False
         self.difPositionWithObjectivePosition = (0, 0, 0)
