@@ -128,7 +128,7 @@ if __name__ == "__main__":
     calculateSystem = CalculateSystemClass(calculateSystemPosition)
     calculateSystem.setCounterMeasuresPosition(counterMeasuresSystems)
 
-    pool = multiprocess.Pool(processes=6)
+    pool = multiprocess.Pool()
 
     while run:
         multiprocess.freeze_support()
