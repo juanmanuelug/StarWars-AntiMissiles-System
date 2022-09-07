@@ -156,7 +156,8 @@ if __name__ == "__main__":
                             pause = not pause
 
         actualTime = pygame.time.get_ticks()
-        if not hasSpawnMissiles and numberOfEnemyMissiles[0] >= missileId and (actualTime - lastTimeSpawn) / 1000 > 1:
+        if not hasSpawnMissiles and numberOfEnemyMissiles[0] >= missileId and (actualTime - lastTimeSpawn) / 1000 > 1 \
+                and len(strategicLocations) != 0:
             lastTimeSpawn = pygame.time.get_ticks()
             spawnEnemyMissiles(enemies, strategicLocations)
             if missileId == numberOfEnemyMissiles[0]:
