@@ -138,7 +138,7 @@ if __name__ == "__main__":
             if event.type == pygame.KEYDOWN:
                 pressed = pygame.key.get_pressed()
                 if pressed[pygame.K_w]:
-                    if FPS < 30:
+                    if FPS < 60:
                         FPS += 10
                 if pressed[pygame.K_s]:
                     if FPS > 10:
